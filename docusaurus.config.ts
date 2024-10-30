@@ -122,7 +122,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Minami Ueda. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Minami Ueda. Powered by Docusaurus, Vercel, and Cloudflare.`,
     },
     prism: {
       theme: prismThemes.github,
