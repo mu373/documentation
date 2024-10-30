@@ -25,6 +25,10 @@
   --ifm-color-primary-lightest: #82d5ff;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .footer__copyright {
   font-size: 80%;
 }
