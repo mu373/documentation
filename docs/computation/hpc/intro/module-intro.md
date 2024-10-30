@@ -44,7 +44,7 @@ module avail
 ## Understanding how modules work
 Let's take a look at the `discovery` module file, which is loaded a module loaded to Discovery cluster by default. Using the `module show` command, we get something like this. (Note that IP address and port has been modified in the following console output, just for the purpose of explanation.)
 
-```sh
+```shell-session
 $ module show discovery
 -------------------------------------------------------------------
 /shared/centos7/modulefiles/discovery/2021-10-06:
