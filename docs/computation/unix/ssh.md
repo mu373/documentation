@@ -80,7 +80,11 @@ Since the SSH client reads the predefined configuration file for alias `server1`
 ssh john@server1.example.com -p 1111 -i ~/.ssh/id_ed25519
 ```
 
-## Portforwarding
+## Port forwarding
+Let's say that you have started Jupyter Lab on the remote server, and it is available at `http://localhost:8888` on the server. How can we access this Jupyter Lab from a browser on our local device? By default, you cannot access it even if you type in that URL on your device. It's running at the `localhost` on the remote server, not your local device.
+
+**Port forwarding** is the solution for such cases. As the term tells by itself, **we forward the ports on remote servers to ports on our devices**, so that `http://localhost:8888` (or any other ports) on local devices points to what's available on the server. The connection is provided by SSH, which means that everything that is transferred is encrypted using cryptographic algorithms.
+
 
 
 ## Additional resources
