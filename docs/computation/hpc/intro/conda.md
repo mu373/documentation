@@ -16,7 +16,7 @@ module load anaconda3/2022.05
 ```
 
 
-## Creating a new conda environment
+## Creating a new conda environment {#conda-create}
 ```sh
 conda create --prefix ~/your/path/to/conda/environment/newproject python=3.12
 ```
