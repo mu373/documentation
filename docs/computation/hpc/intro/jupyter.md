@@ -57,7 +57,7 @@ srun --jobid=<your_job_id> --pty tmux a
 
 :::tip
 Ensure you detach (`<tmux prefix> d`) when you finish using it instead of killing the shell.  
-By default, the tmux prefix is `Ctrl-b`. So to detatch, you first push `Ctrl-b` first, release the keys, and then type `d`.
+By default, the tmux prefix is `Ctrl-b`. To detatch, you first push `Ctrl-b` first, release the keys, and then type `d`.
 :::
 
 Check for the hostname of the allocated computing node using the following command. For Discovery, the hostname for computing nodes are `cXXXX` where `XXXX` is a four-digit number.
@@ -66,7 +66,7 @@ hostname
 ```
 
 ## Installing Jupyter Lab {#install-jupyter}
-Now that we've got a computing node allocated, let's dive in to starting Jupyter Lab. If this is your first time using Jupyter Lab in the conda environment that you are using, you might need to install relevant Python packages first. Skip to the [next step](#start-jupyter) if you already installed Jupyter Lab.
+Now that we've got a computing node allocated, let's dive in to starting Jupyter Lab. If this is your first time using Jupyter Lab in the conda environment that you are using, you might need to install relevant Python packages first. Skip to the [next step](#start-jupyter) if you already installed Jupyter Lab in the conda environment.
 
 Inside the `tmux` session on the computing node, run the following commands.
 ```sh
@@ -85,12 +85,16 @@ After installing `jupyter-lab` in the `conda` environment, let's start the Jupyt
 jupyter lab --no-browser
 ```
 
-## Port forward
+## Port-forwarding on local machine
 Since the Jupyter Lab that you just started works in the remote server (computing node), it is not accessible from the browser on your local device, by default. You have to set up **port-forwarding** so that you have access to what's running on the remote server.
 
 There are multiple ways to do this, but let's stick to the most basic way which is through the `ssh` command.
 
 ### Setting up port forward with `ssh` command
+
+:::info
+You would be working on your local device for this step, not on Discovery!
+:::
 
 <!-- #### Set up SSH config -->
 Open your local terminal, and make sure that you have SSH configurations set up for your computing node and the login node. If you have't, add the following lines to `~/.ssh/config` in your local machine.
@@ -110,7 +114,18 @@ Host c0001
    ProxyCommand ssh -W %h:%p discovery
 ```
 
-This is the command for port forwarding from a remote server.
+:::tip
+
+Since Slurm allocates you node(s) that are available at that moment, the hostname (e.g., `c0001`) would probably be different for every job that you request. This means you need to set up a new configuration for different computing nodes.
+
+If you want to specify the node for the job, you could add the `SBATCH` option in the batch file. The `c0001` part should point to the available node in your partition.
+```sh
+#SBATCH --nodelist=c0001
+```
+
+:::
+
+Once you've prepared a SSH config file, start port forwarding with the following command.
 
 ```sh
 ssh -L <local_port>:localhost:<remote_port> <remote_hostname>
@@ -131,6 +146,6 @@ Typing in the long-and-hard-to-memorize `ssh` command everytime could be cumbers
 
 
 ## Access Jupyter Lab from browser
-If the port-forwarding is working properly, you should finally be able to access Jupyter Lab on your machine. Type in `http://localhost:8888` in the browser.
+If the port-forwarding is working properly, you should finally be able to access Jupyter Lab on your machine. Type in `http://localhost:8889` (or whichever port that you've forwarded to) in the browser.
 
 Voila, you're ready to go!
