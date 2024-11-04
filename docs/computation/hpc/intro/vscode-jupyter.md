@@ -6,11 +6,11 @@ slug: vscode-jupyter
 # Jupyter on VS Code
 
 ## Introduction
-In the previous sections, we've learend how to start Jupyter Lab on Discovery computing node and how to connect those nodes from VS Code. If you haven't, follow the following tutorials:
+In the previous sections, we've learned how to start Jupyter Lab on Discovery computing node and how to connect those nodes from VS Code. If you haven't, you can follow the following tutorials:
 - [Starting a Jupyter Lab on computing node](/docs/computation/hpc/intro/jupyter)
 - [Connecting VS Code to Discovery](/docs/computation/hpc/intro/vscode)
 
-Now, you can even **use Jupyter directly from VS Code**, which offers more powerful editing experience than on browsers.
+Now, **you can even use Jupyter directly from VS Code**, which offers more powerful editing experience than in browsers.
 
 ## Reasons to use Jupyter from VS Code
 Why would I care to use Jupyter from VS Code when it can be accessed from any browser?

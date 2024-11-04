@@ -5,25 +5,27 @@ slug: custom-module
 
 # Custom module
 
-Once you have installed a software for yourself, you can use `module` to control the usage of the software. The advantage of not directly adding binary paths to PATH is that you have control to when to make the software available.
+Once you have installed a software for yourself, you can use the `module` tool to control the usage of the software. The advantage of not directly adding binary paths to `PATH` is that you have control to deciding when to load the software to the environment.
 
-## Setting up custom module path
+## Setting up a custom module directory
 
-We can create custom modules 
-It can be stored anywhere, but let's use the `~/discovery/modulefile/` directory for here.
+Custom module files can be created and stored anywhere, but let's use the `~/discovery/modulefile/` directory for here.
 
 ```sh
 # If you don't have ~/discovery/modulefile/ directory
 mkdir -p ~/discovery/modulefile
 ```
 
-Add this to your shell configuration file, i.e., `.bashrc`. This tells the `module` that your custom module files are stored at the specific directory.
+Add this to your shell configuration file, i.e., `.bashrc`. This tells the `module` command that your custom module files are stored at the specific directory.
 ```sh
 module use --append ~/discovery/modulefile
 ```
 
-## Making Module file
-Make a modulefile at path `~/discovery/modulefiles/your_software_name/your_version`.
+## Making a custom module file
+
+Once you've created a directory to store custom modules, let's add one by making a new modulefile at `~/discovery/modulefiles/your_software_name/your_version`.
+
+The following is an example for loading mamba, that I have separately installed. (You need to install the software manually to be able to run commands like `mamba install pandas`!)
 
 ```txt title="Modulefile for mamba:1.5.9"
 #%Module
@@ -32,7 +34,6 @@ module-whatis "Loads Mamba 1.5.9 module.
 
 mamba is a reimplementation of the conda package manager in C++.
 mamba version: 1.5.9
-Source description from: https://spack.io/
 
 To load the module, type:
 module load ~/discovery/modulefiles/mamba/1.5.9
