@@ -10,7 +10,7 @@ You can run your own Jupyter Lab for yourself, without depending on the OOD.
 ## Getting computing nodes {#get-computing-node}
 Let's start by getting a computing node allocated. Why computing nodes? As the name tells, the login nodes are designed exclusively for "login" purposes, and thus any computations should be done on computing nodes. Take advantage of the available resources in the computing nodes!
 
-On Discovery, create a new batch file as following. This batch file specifies the options for the computing node, starts `tmux` and run it until the time limit. `tmux` is a terminal multiplexer that allows you to run use multiple panes and tabs in command line interface, and also keeps the session running in the background even when you close the screen (detach the session).
+On Discovery, create a new batch file as following. This batch file specifies the options for the computing node, starts `tmux` and keeps the job running until the time limit. `tmux` is a terminal multiplexer that allows you to run use multiple panes and tabs in command line interface, and also keeps the session running in the background even when you close the screen (detach the session).
 
 ```bash title="tmux.sh"
 #!/bin/bash
@@ -41,16 +41,16 @@ tmux new -d -s "0"
 sleep infinity
 ```
 
-Once you've created the batch file, let's submit the job. This batch file will request for a computing node, and if it's accepted, start a tmux session that lasts until the time limit you've set.
+Once you've created the batch file, let's submit the job. This batch file will request for a computing node with the options we've specified, and if that's accepted by the system, a new tmux session will start up in the allocated node.
+
+```sh
+sbatch tmux.sh
+```
 
 :::note
 If this is your first time using the `sbatch` `squeue` `srun` commands, you can [learn Slurm concepts and commands here](/docs/computation/hpc/intro/slurm).
 :::
 
-
-```sh
-sbatch tmux.sh
-```
 
 Let's check that if the batch has been processed properly, using the `squeue` command. If the `ST` column is `R`, it means that the job is running.
 ```shell-session
@@ -59,9 +59,14 @@ $ squeue -u $USER
            1234567 express       tmux.sh  john R    00:59:30      1 c0001
 ```
 
-After confirming that the job is running, you can enter the shell by attaching to the tmux session on the allocated node with the `srun` command. This will open up a `tmux` screen. Job ID is shown in the output from the `squeue` command.
+After confirming that the job is running, you can enter the shell by "attaching" to the tmux session with the `srun` command. This will open up a `tmux` screen. (Job ID is shown in the output of the `squeue` command.)
 ```sh
 srun --jobid=<your_job_id> --pty tmux a
+```
+
+Once entering the shell, the prompt would tell you the hostname of the node that you were allocated to. In the following example, you are allocated to node `c0001`. For Discovery, the hostname for computing nodes are `cXXXX` where `XXXX` is a four-digit number.
+```shell-session title="Shell prompt in the allocated node"
+[john@c0001 ~]$
 ```
 
 :::tip
@@ -69,10 +74,6 @@ Ensure you detach (`<tmux_prefix> d`) when you finish using it instead of killin
 By default, the tmux prefix is set to `Ctrl-b`. To detatch, you first push `Ctrl-b` first, release the keys, and then type `d`.
 :::
 
-Once entering the shell, the prompt would tell you the hostname of the node that you were allocated to. In the following example, you are allocated to node `c0001`. For Discovery, the hostname for computing nodes are `cXXXX` where `XXXX` is a four-digit number.
-```shell-session title="Shell prompt in the allocated node"
-[john@c0001 ~]$
-```
 
 ## Installing Jupyter Lab {#install-jupyter}
 Now that we've got a computing node allocated, let's dive in to starting Jupyter Lab. If this is your first time using Jupyter Lab in the conda environment that you are using, you might need to install relevant Python packages first. Skip to the [next step](#start-jupyter) if you already installed Jupyter Lab in the conda environment.
