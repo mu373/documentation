@@ -128,7 +128,7 @@ Host c0001
 
 Since Slurm allocates you node(s) that are available at that moment, the hostname (e.g., `c0001`) would probably be different for every job that you request. This means you need to set up a new configuration for different computing nodes.
 
-If you want to specify the node for the job, you could add the `SBATCH` option in the batch file. The `c0001` part should point to the available node in your partition.
+If you want to specify the node for the job, you could add the `--nodelist` option in the batch file. The `c0001` part should point to the available node in your partition.
 ```
 #SBATCH --nodelist=c0001
 ```
@@ -139,8 +139,8 @@ $ sinfo -p <partition_name> -o "%N %T"
 NODELIST STATE
 c[0004,0016,0021] drained*
 c0100 down*
-c[0005,0006-0015,0020,0050-0055,0099] mixed
-c[0001-004,0017-0019,0021-0049,0056-0098,0101-0105] idle
+c[0005-0015,0020,0050-0055,0099] mixed
+c[0001-003,0017-0019,0022-0049,0056-0098,0101-0105] idle
 ```
 
 
