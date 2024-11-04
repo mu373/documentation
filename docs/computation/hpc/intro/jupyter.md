@@ -107,7 +107,7 @@ You would be working on your **local device** for this step, not on Discovery!
 :::
 
 <!-- #### Set up SSH config -->
-Open your local terminal, and make sure that you have SSH configurations set up for your computing node and the login node. If you have't, add the following lines to `~/.ssh/config` in your local machine.
+Open your local terminal, and make sure that you have SSH configurations set up for your computing node and the login node. If you have't, add the following lines to `~/.ssh/config` in your local machine. [See this page](/docs/computation/unix/ssh) for detailed explanations on setting up and using SSH.
 
 ```txt title="~/.ssh/config"
 # Login node
