@@ -3,23 +3,50 @@ sidebar_position: 8
 slug: conda
 ---
 
-# Conda
+# Anaconda
 
 ## What is Anaconda?
 
+**Anaconda** is a Python and R distribution, primarily designed for data science and scientific computing. It comes with popular packages―i.e.,  NumPy, pandas, and matplotlib―pre-installed, so it works "out of the box" without complex configurations.
 
-## Using anaconda in Discovery
-Let's first check if the `conda` itself is loaded. By default, anaconda is not usually loaded on Discovery. 
-```sh
-module list
+**conda** is an open-source package and environment manager that comes with Anaconda. 
+- As a **package manager**, it resolves dependencies, downloads, installs, and updates Python packages
+- As an **environment manager**, it allows you to **create an isolated "virtual environment"** for projects. The advantage of using an virtual environment is that you can have different packages and versions of them for each project without affecting other projects or the entire system. For example, you can have Python 3.6 and NumPy v1.1 for one project and Python 3.12 and NumPy v2.1 for an another project.
+
+:::note
+There is a faster alternative to conda called **mamba**, which is an reimplementation of conda in C++. It offers faster downloads and dependency resolving while retaining compatibility to conda. While it is not available on Discovery by default, you can use it by installing it by yourself. [See here](https://github.com/mamba-org/mamba) for more information on mamba.
+:::
+
+
+## Using conda in Discovery
+
+### Anaconda is not loaded by default
+Since Anaconda is not loaded on Discovery by default, the `conda` command is not accessible at this point.
+
+```shell-session
+$ conda
+bash: conda: command not found
 ```
 
-If it doesn't list something like `anaconda3/2022.05`, you would first have to load the `anaconda3` module.
+You can also confirm this also by checking the list of loaded modules. The only default module loaded is the `discovery` module.
+```shell-session
+$ module list
+Currently Loaded Modulefiles:
+  1) discovery/2021-10-06
+```
+
+### Loading Anaconda module
+To use Anaconda, load the `anaconda3` module as follows:
 ```sh
 module load anaconda3/2022.05
 ```
 
-Now, `conda` command should be ready to use.
+Now, the `conda` command should be ready to use.
+```shell-session
+$ module list
+Currently Loaded Modulefiles:
+  1) discovery/2021-10-06   2) anaconda3/2022.05
+```
 ```shell-session
 $ conda
 usage: conda [-h] [-V] command ...
@@ -48,7 +75,11 @@ positional arguments:
     update       Updates conda packages to the latest compatible version.
     upgrade      Alias for conda update.
 ```
-## Commands for conda
+
+
+## `conda` commands
+
+Here are some of the frequently used commands for `conda`.
 
 ### Create a new conda environment {#conda-create}
 This command will create a new conda environment at a specified location, with Python 3.12.
@@ -63,7 +94,7 @@ In Discovery, use `source activate` instead of `conda activate`.
 source activate ~/your/path/to/conda/environment/newproject
 ```
 
-### Intall packages to an environment
+### Install packages to an environment
 ```sh
 # After activating an environment
 conda install networkx numpy matplotlib scipy
@@ -73,3 +104,7 @@ conda install networkx numpy matplotlib scipy
 ```sh
 conda list
 ```
+
+:::tip
+Here's the [official cheatsheet](https://docs.conda.io/projects/conda/en/latest/user-guide/cheatsheet.html) of conda.
+:::
