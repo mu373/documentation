@@ -96,14 +96,14 @@ jupyter lab --no-browser
 ```
 
 ## Port-forwarding on local machine {#port-forwarding}
-Since the Jupyter Lab that you just started works in the remote server (computing node), it is not accessible from the browser on your local device, by default. You have to set up **port-forwarding** so that you have access to what's running on the remote server.
+Since the Jupyter Lab that you just started works in the remote server (computing node), it is not accessible from the browser on your local device at startup. You have to set up **port-forwarding** so that you have access to what's running on the remote server.
 
 There are multiple ways to do this, but let's stick to the most basic way which is through the `ssh` command.
 
 ### Setting up port forward with `ssh` command
 
 :::info
-You would be working on your local device for this step, not on Discovery!
+You would be working on your **local device** for this step, not on Discovery!
 :::
 
 <!-- #### Set up SSH config -->
@@ -161,7 +161,7 @@ Although the screen you see after running the above command would look exactly t
 
 ### Alternatives
 
-Typing in the long `ssh` command everytime to forward ports could be tiring. (Who can remember the order of local ports and remote ports for that command?) In such case, there are multiple alternative methods that does same thing in user-friendly ways:
+Typing in the long `ssh` command everytime to forward ports could be tiring. (Who can remember the order of local ports and remote ports for that command?) In such case, there are multiple alternative methods that does the same thing in user-friendly ways:
 - Use [VS Code with Remote SSH extension](/docs/computation/hpc/intro/vscode-jupyter)
     - [Official documentation](https://code.visualstudio.com/docs/editor/port-forwarding)
 - Use GUI applications
@@ -173,7 +173,7 @@ Typing in the long `ssh` command everytime to forward ports could be tiring. (Wh
 ## Accessing Jupyter Lab from browser {#browser}
 If the port-forwarding is working properly, you should finally be able to access Jupyter Lab on your machine. Type in `http://localhost:8889` (or whichever port that you've forwarded to) in the browser.
 
-When the Jupyter asks for a token or a password, run the following in the computing node.
+When the Jupyter asks for a token or a password, run the following in your **allocated node**.
 ```shell-session
 $ jupyter server list
 
