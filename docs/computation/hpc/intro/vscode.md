@@ -6,6 +6,10 @@ slug: vscode
 # Discovery with VS Code
 Want to edit files directly from VSCode? There is a way to do that.
 
+
+## Introduction to VS Code
+VS Code is a source code editor developed by Microsoft. Not only that it has powerful editing capabilities including IntelliSense code completion and debugging, it can be customized by installing third-party extensions, allowing the users to boost their developer experiences. It is an Electron based application, meaning that it is built based on the web technologies such as JavaScript and Node.js. You can read more on the [VS Code official documentation](https://code.visualstudio.com/docs/editor/whyvscode).
+
 ## Installing VS Code
 VS Code is available for Mac, Windows, and Linux.
 
