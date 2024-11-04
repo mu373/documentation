@@ -160,10 +160,12 @@ Although the screen you see after running the above command would look exactly t
 
 ### Alternatives
 
-Typing in the long-and-hard-to-memorize `ssh` command for port-forwarding everytime could be tiring. In that case, there are multiple alternative methods that does same thing in a user-friendly way:
+Typing in the long `ssh` command everytime to forward ports could be tiring. (Who can remember the order of local ports and remote ports for that command?) In such case, there are multiple alternative methods that does same thing in user-friendly ways:
 - Use [VS Code with Remote SSH extension](/docs/computation/hpc/intro/vscode-jupyter)
+    - [Official documentation](https://code.visualstudio.com/docs/editor/port-forwarding)
 - Use GUI applications
-    - [Core Tunnnel](https://codinn.com/tunnel/) (Mac)
+    - [Core Tunnnel](https://codinn.com/tunnel/) (macOS)
+    - [Secure Pipes](https://www.perfect-privacy.com/en/manuals/macos_ssh_securepipes) (macOS)
 
 
 
