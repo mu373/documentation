@@ -183,4 +183,4 @@ http://localhost:8888/?token=TOKEN_IS_PRINTED_HERE :: /home/john
 
 Copy and paste the token from the URL and click "Log in."
 
-Voila, you're ready to go!
+Voila, you're ready to go! If you want to access Jupyter notebooks from VS Code, not from browser, follow the [tutorial here](/docs/computation/hpc/intro/vscode-jupyter).
