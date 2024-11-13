@@ -20,6 +20,11 @@ Go to the "Remote Explorer" (icon with PC monitor) in the activity bar (the bar 
 
 Once you have located the server that you would like to connect (could be a login node, or a computing node), click on the arrow button to start a session. -->
 
+
+## Connect VS Code to the server
+Let's first kick off this section by connecting VS Code to the server that you want to work. Probably you would like to connect to a computing node by following the [tutorials here](/docs/computation/hpc/intro/jupyter).
+
+
 ## Installing VS Code extensions on the server {#install-vscode-extension}
 To use Jupyter on the remotely connected VS Code, you need to install following extensions.
 
