@@ -28,15 +28,17 @@ To `ssh` into a server, we type in a command like this. Here, we are telling tha
 ssh john@server1.example.com
 ```
 
-Instead of authenticating by password, we can also use public key authentication to identify ourselves using the private key.
+## SSH with public key authentication (optional)
+This step is optional, only if you want to access the server using public key authentication.
+
+### Generating SSH keypairs
+Let's check if you already have a SSH key in your local device.
 ```sh
-ssh john@server1.example.com -i ~/.ssh/id_ed25519
+cd ~/.ssh
+ls -al
 ```
-The `-i` flag is for "identity file," and we pass the path for the private key following it. The path could depend on the file name of the private key that you are using.
 
-## Setting up SSH config
-
-If there is a server that you access regularly, you could use a predefined configuration file instead of typing in the password, user name, hostname, and the path to keys every time. We use the `~/.ssh/config` file to store such SSH configurations.
+If you can't find files that is named something like `id_ed25519`, you'll need to generate a new SSH keypair. [See here](/docs/computation/unix/public-key) for detailed instructions on how to generate a SSH key-pair.
 
 Let's first ensure that we have the `~/.ssh/` directory and that it is accessible only by yourself.
 ```sh
@@ -44,13 +46,49 @@ mkdir -p ~/.ssh
 chmod 700 ~/.ssh
 ```
 
-Now, we make a new configuration file.
 ```sh
+cd ~/.ssh
+ssh-keygen -t ed25519 -C "mail@example.com"
+```
+
+### Adding your key to the server
+```sh
+# In your local device
+cd ~/.ssh
+
+# Let's check the contents of the public key
+cat id_ed25519.pub
+
+# Copy the public key to the server
+scp id_ed25519.pub john@server1.example.com:~/.ssh/
+```
+
+```sh
+# In the remote server
+# Register the public key as "authorized key"
+cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+```
+
+Now that we've registered our public key to the server, we can use public key authentication to identify ourselves, instead of authenticating by password, 
+```sh
+ssh john@server1.example.com -i ~/.ssh/id_ed25519
+```
+
+The `-i` flag is for "identity file," and we pass the path for the private key following it. The path could depend on the file name of the private key that you are using.
+
+
+## Setting up SSH config
+
+If there is a server that you access regularly, you could use a predefined configuration file instead of typing in the password, user name, hostname, and the path to keys every time. We use the `~/.ssh/config` file to store such SSH configurations.
+
+Let's make a new configuration file.
+```sh
+cd ~/.ssh
 touch ~/.ssh/config
 chmod 600 ~/.ssh/config
 ```
 
-Using a text editor you prefer, write configurations in the following manner.
+Using a text editor you prefer, write configurations in the following manner. The `IdentityFile` line is optional, only required if you want to use public key authentication.
 ```txt title="~/.ssh/config"
 Host server1
     HostName server1.example.com
