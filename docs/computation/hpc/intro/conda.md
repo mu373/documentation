@@ -110,6 +110,17 @@ conda list
 conda env list
 ```
 
+### Importing and exporting an environment {#conda-env-export}
+You can share the virtual environment with other people, so that they can reproduce the same environment for running your codes.
+```sh
+# Export
+conda env export -p ~/your/path/to/conda/environment/foo > conda_env_foo.yml
+
+# Import (Create a new environment from YAML)
+conda env create -f=conda_env_foo.yml
+```
+
+
 :::tip
 Here's the [official cheatsheet](https://docs.conda.io/projects/conda/en/latest/user-guide/cheatsheet.html) of conda.
 :::
