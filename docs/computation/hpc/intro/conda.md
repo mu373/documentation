@@ -105,6 +105,11 @@ conda install networkx numpy matplotlib scipy
 conda list
 ```
 
+### Showing list of environments {#conda-env-list}
+```sh
+conda env list
+```
+
 :::tip
 Here's the [official cheatsheet](https://docs.conda.io/projects/conda/en/latest/user-guide/cheatsheet.html) of conda.
 :::
