@@ -48,3 +48,7 @@ Alternatively, you could create a new Jupyter notebook from scratch in VS Code.
 
 ## Connecting to Jupyter Lab {#kernel}
 While it is possible to directly select interpreters, we will choose to connect to an existing Jupyter Lab session here. This is because connecting to a separate Jupyter Lab allows the kernels to be running, even when we close the connection or close VS Code.
+
+- Click on "Select Kernel"
+- Click "Existing Jupyter Server..."
+- Paste the Jupyter URL ( `http://localhost:<some_port>`). If you've lost the URL, `jupyter server list` will show you the same URL.
