@@ -84,7 +84,7 @@ Here are some of the frequently used commands for `conda`.
 ### Creating a new conda environment {#conda-create}
 This command will create a new conda environment at a specified location, with Python 3.12.
 ```sh
-conda create --prefix ~/your/path/to/conda/environment/newproject python=3.12
+conda create --name newproject --prefix ~/your/path/to/conda/environment/newproject python=3.12
 ```
 
 ### Activating an environment {#conda-activate}
