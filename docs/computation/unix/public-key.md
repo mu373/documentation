@@ -54,7 +54,7 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDOYfZ33zaFZDws4FwLxNAxRqBykbGXM1H6QjglfJXPE
 ```
 
 :::info
-As the name tells, **public keys can be public**. You can publish it on key servers, your websites, email it to a friend. But **NEVER share or publish the private key***, as will compromise the security.
+As the name tells, **public keys can be public**. You can publish it on key servers, your websites, or email it to a friend. But **NEVER share or publish the private key***, as will compromise the security.
 :::
 
 
