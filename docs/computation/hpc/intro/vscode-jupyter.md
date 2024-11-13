@@ -52,3 +52,16 @@ While it is possible to directly select interpreters, we will choose to connect 
 - Click on "Select Kernel"
 - Click "Existing Jupyter Server..."
 - Paste the Jupyter URL ( `http://localhost:<some_port>`). If you've lost the URL, `jupyter server list` will show you the same URL.
+
+
+## Adding kernels to Jupyter {#add-kernel}
+```sh
+# Activate the conda environment that you want to install a kernel
+source activate ~/your/path/to/conda/environment/project1
+
+# Make sure that Jupyter is installed in this conda environment
+conda install jupyter -y
+
+# Install the kernel. Run this inside the conda environment you want to add the kernel to.
+ipython kernel install --name project1 --display-name="Python 3 (project1)" --prefix="/home/$USER/.local/"
+```
