@@ -42,6 +42,7 @@ If you haven't started Jupyter Lab inside `tmux` on the computing node, type in 
 # On computing node
 jupyter lab --no-browser
 ```
+After a while, it should show URLs starting with `http://localhost:<some_port>`. Keep this URL somewhere because we'll use it later.
 
 ## Opening the notebook in VS Code {#open-notebook}
 Using the filer in the "Explorer" pane, locate your Jupyter notebook file  (a file with extension `.ipynb`) that you would like to open.
