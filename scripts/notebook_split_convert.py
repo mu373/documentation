@@ -1,0 +1,361 @@
+#!/usr/bin/env python3
+import os
+import re
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+import shutil
+
+import nbformat
+from nbconvert.exporters import MarkdownExporter
+from nbconvert.preprocessors import Preprocessor
+import yaml
+
+
+class EscapePreprocessor(Preprocessor):
+    def escape_html(self, text):
+        """
+        Escape HTML special characters in the given text.
+
+        Args:
+            text (str): The text to escape.
+
+        Returns:
+            str: The escaped text with special HTML characters replaced
+                 by their corresponding HTML entities.
+        """
+        # The ampersand must be replaced first to avoid double-escaping.
+        text = text.replace("&", "&amp;")
+        text = text.replace("<", "&lt;")
+        text = text.replace(">", "&gt;")
+        text = text.replace('"', "&quot;")
+        text = text.replace("'", "&#39;")
+        return text
+
+    def preprocess_cell(self, cell, resources, cell_index):
+        if cell.cell_type == "markdown":
+            # Rewrite .ipynb links to .md links.
+            cell.source = re.sub(
+                r"\[([^\]]*)\]\((?![^\)]*//)([^)]*)\.ipynb\)",
+                r"[\1](\2.md)",
+                cell.source,
+            )
+
+        elif cell.cell_type == "code":
+            # Escape triple backticks in code cells.
+            cell.source = cell.source.replace("```", r"\`\`\`")
+
+            if "outputs" in cell:
+                filter_out = set()
+                for i, output in enumerate(cell["outputs"]):
+                    if "text" in output:
+                        if not output["text"].strip():
+                            filter_out.add(i)
+                            continue
+                        # First replace triple backticks, then escape HTML special characters.
+                        escaped_text = self.escape_html(output["text"].replace("```", r"\`\`\`"))
+                        output["text"] = escaped_text
+                    elif "data" in output:
+                        for key, value in output["data"].items():
+                            if isinstance(value, str):
+                                escaped_value = self.escape_html(value.replace("```", r"\`\`\`"))
+                                output["data"][key] = escaped_value
+                cell["outputs"] = [
+                    output
+                    for i, output in enumerate(cell["outputs"])
+                    if i not in filter_out
+                ]
+
+        return cell, resources
+
+
+
+class ResourceProcessor(Preprocessor):
+    """Handle notebook resources like images."""
+    
+    def __init__(self, static_dir: Path, notebook_name: str):
+        super().__init__()
+        self.notebook_name = notebook_name
+        self.assets_dir = static_dir / "notebooks" / notebook_name
+        self.assets_dir.mkdir(parents=True, exist_ok=True)
+        
+    def preprocess_cell(self, cell, resources, cell_index):
+        if cell.cell_type == "markdown":
+            # Handle embedded images
+            cell.source = self._process_markdown_images(cell.source)
+        elif cell.cell_type == "code" and "outputs" in cell:
+            # Handle output images
+            cell["outputs"] = self._process_output_images(cell["outputs"])
+            
+        return cell, resources
+    
+    def _process_markdown_images(self, source: str) -> str:
+        """Process and save images in markdown content."""
+        def replace_image(match):
+            img_path = match.group(2)
+            if img_path.startswith("data:"):
+                # Handle base64 embedded images
+                import base64
+                import hashlib
+                
+                # Extract mime type and data
+                mime_match = re.match(r"data:([^;]+);base64,(.+)", img_path)
+                if mime_match:
+                    mime_type, b64_data = mime_match.groups()
+                    ext = mime_type.split('/')[-1]
+                    
+                    # Generate filename from content hash
+                    data = base64.b64decode(b64_data)
+                    filename = hashlib.md5(data).hexdigest()[:12] + '.' + ext
+                    
+                    # Save image
+                    img_file = self.assets_dir / filename
+                    img_file.write_bytes(data)
+                    
+                    # Return relative path
+                    return f"![{match.group(1)}](/notebooks/{self.notebook_name}/{filename})"
+            else:
+                # Handle regular image files
+                src_path = Path(img_path)
+                if src_path.exists():
+                    new_name = src_path.name
+                    dst_path = self.assets_dir / new_name
+                    shutil.copy2(src_path, dst_path)
+                    return f"![{match.group(1)}](/notebooks/{self.notebook_name}/{new_name})"
+            return match.group(0)
+        
+        # Find and process all image references
+        return re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", replace_image, source)
+    
+    def _process_output_images(self, outputs: List[Dict]) -> List[Dict]:
+        """Process and save images in cell outputs."""
+        new_outputs = []
+        for output in outputs:
+            if "data" in output:
+                new_data = {}
+                for mime_type, data in output["data"].items():
+                    if mime_type.startswith("image/"):
+                        # Save image data
+                        import base64
+                        import hashlib
+                        
+                        ext = mime_type.split('/')[-1]
+                        if isinstance(data, str):
+                            if data.startswith("data:"):
+                                # Handle data URLs
+                                b64_data = data.split(",", 1)[1]
+                                img_data = base64.b64decode(b64_data)
+                            else:
+                                # Handle base64 directly
+                                img_data = base64.b64decode(data)
+                        else:
+                            img_data = data
+                            
+                        # Generate filename from content hash
+                        filename = hashlib.md5(img_data).hexdigest()[:12] + '.' + ext
+                        
+                        # Save image
+                        img_file = self.assets_dir / filename
+                        print("saving to {}".format(img_file))
+                        img_file.write_bytes(img_data)
+                        
+                        # Update reference
+                        new_data[mime_type] = f"/notebooks/{self.notebook_name}/{filename}"
+                    else:
+                        new_data[mime_type] = data
+                output["data"] = new_data
+            new_outputs.append(output)
+        return new_outputs
+
+
+def parse_frontmatter(cell_source: str) -> Optional[Dict]:
+    """Parse YAML frontmatter from a cell if it exists."""
+    if not cell_source.startswith('---\n'):
+        return None
+    
+    parts = cell_source.split('---\n', 2)
+    if len(parts) < 3:
+        return None
+    
+    try:
+        return yaml.safe_load(parts[1])
+    except yaml.YAMLError:
+        return None
+
+def generate_chapter_index_md(nb, output_dir: Path):
+    for i, cell in enumerate(nb.cells):
+        if cell.cell_type == "raw" and "# !chapter" in cell.source:
+            index_frontmatter = cell.source.split("# !chapter", 1)[1].strip()
+            break;
+    
+    # Check if frontmatter exists 
+    if not 'index_frontmatter' in locals():
+        print("Warning: No chapter frontmatter found in notebook")
+        index_frontmatter = "---\ntitle: Untitled\n---\n"
+    else:
+        # Replace "chapter-title:" with "title:" in frontmatter
+        index_frontmatter = index_frontmatter.replace("chapter-title:", "title:")
+    
+    # Create directories
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Write the index file
+    index_path = output_dir / "index.md"
+    with open(index_path, "w") as f:
+        f.write(index_frontmatter)
+    
+    return index_path
+
+
+def split_notebook_cells(nb: nbformat.NotebookNode) -> List[List[nbformat.NotebookNode]]:
+    """Split notebook cells into sections based on # !pagebreak markers."""
+    # Find all indices of cells containing pagebreaks
+    pagebreak_indices = []
+    for i, cell in enumerate(nb.cells):
+        if cell.cell_type == "raw" and "# !pagebreak" in cell.source:
+            pagebreak_indices.append(i)
+    
+    # If no pagebreaks found, return the entire notebook as one section
+    if not pagebreak_indices:
+        return [nb.cells]
+    
+    # Split cells into sections
+    sections = []
+    
+    # First section: all cells before the first pagebreak
+    if pagebreak_indices[0] > 0:
+        # add cells to sections if  cells  not starting with # !chapter
+        # sections.append(nb.cells[:pagebreak_indices[0]])
+
+        sections.append(
+            [cell for cell in nb.cells[:pagebreak_indices[0]] if "# !chapter" not in cell.source]
+        )
+    
+    # Process each pagebreak
+    for i, pb_idx in enumerate(pagebreak_indices):
+        # Get the raw cell with pagebreak
+        pb_cell = nb.cells[pb_idx]
+        
+        # Extract content after pagebreak
+        content_after_pb = pb_cell.source.split("# !pagebreak", 1)[1].strip()
+        
+        # Start a new section
+        section_cells = []
+        
+        # Add the content after pagebreak as a new raw cell if it exists
+        if content_after_pb:
+            new_cell = nbformat.v4.new_raw_cell(content_after_pb)
+            section_cells.append(new_cell)
+        
+        # Add all cells until the next pagebreak (or end of notebook)
+        next_pb_idx = pagebreak_indices[i + 1] if i + 1 < len(pagebreak_indices) else len(nb.cells)
+        section_cells.extend(nb.cells[pb_idx + 1:next_pb_idx])
+        
+        # Add the section if it has cells
+        if section_cells:
+            sections.append(section_cells)
+    
+    return sections
+
+
+def convert_section_to_markdown(
+    original_nb: nbformat.NotebookNode, 
+    cells: List[nbformat.NotebookNode], 
+    notebook_dir: Path,
+    static_dir: Path,
+    notebook_name: str,
+    section_num: int
+) -> Tuple[str, Path]:
+    """Convert a section of cells to markdown."""
+    # Create new notebook with just this section's cells
+    nb = nbformat.v4.new_notebook(metadata=original_nb.metadata)
+    nb.cells = cells
+
+    
+    # Setup exporters with resource handling
+    exporter = MarkdownExporter(
+        preprocessors=[
+            EscapePreprocessor,
+            ResourceProcessor(static_dir, notebook_name)
+        ],
+        template_name="mdoutput",
+        extra_template_basedirs=["./scripts/notebook_convert_templates"],
+    )
+    
+    # Convert to markdown
+    body, resources = exporter.from_notebook_node(nb)
+    
+    # Determine output path
+    output_path = notebook_dir / f"autogen-page-{section_num}.mdx"
+    
+    return body, output_path
+
+
+def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) -> List[Path]:
+    """Convert a notebook to multiple markdown files based on pagebreak splits."""
+    # Read notebook
+    with open(notebook_path) as f:
+        nb = nbformat.read(f, as_version=4)
+    
+    # Split notebook into sections
+    sections = split_notebook_cells(nb)
+
+    if not sections:
+        print(f"Warning: No valid sections found in {notebook_path}")
+        return []
+    
+    # Setup directory structure
+    notebook_name = notebook_path.stem
+    # notebook_dir = root_dir / "_intermediate" / "docs" / notebook_name
+    # static_dir = root_dir / "_intermediate"  / "static"
+    notebook_dir = notebook_dir / notebook_name
+    static_dir = root_dir / "_intermediate"  / "static"
+    generate_chapter_index_md(nb, notebook_dir)
+    
+    # Create directories
+    notebook_dir.mkdir(parents=True, exist_ok=True)
+    static_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Process each section
+    output_paths = []
+    for i, section in enumerate(sections, 1):
+        try:
+            body, output_path = convert_section_to_markdown(
+                nb,
+                section, 
+                notebook_dir,
+                static_dir,
+                notebook_name,
+                i
+            )
+            
+            # Write markdown file
+            with open(output_path, "w") as f:
+                f.write(body)
+            
+            output_paths.append(output_path)
+            print(f"Created {output_path}")
+            
+        except Exception as e:
+            print(f"Error processing section {i}: {e}")
+            continue
+    
+    return output_paths
+
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+    
+    parser = argparse.ArgumentParser(description="Convert Jupyter notebooks to multiple markdown files")
+    parser.add_argument("notebook", type=Path, help="Input notebook path")
+    parser.add_argument("root_dir", type=Path, help="Root directory of the project")
+    
+    args = parser.parse_args()
+    
+    if not args.notebook.exists():
+        print(f"Error: Notebook {args.notebook} does not exist")
+        sys.exit(1)
+    
+    notebook_dir = args.notebook.parent
+    output_paths = convert_notebook(args.notebook, notebook_dir, args.root_dir)
+    print(f"\nCreated {len(output_paths)} files")
