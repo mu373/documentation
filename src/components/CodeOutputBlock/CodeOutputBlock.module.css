@@ -11,3 +11,17 @@
 .wrapper div {
   box-shadow: none;
 }
+
+.jupyter-output {
+  margin-top: -11px;
+  pre {
+    background: none !important;
+    /* padding: 0 1em; */
+    border: 1px solid #dfdfdf;
+    border-radius: 0.25em;
+    code {
+      font-size: 0.95em;
+      line-height: 1.3em;
+    }
+  }
+}
