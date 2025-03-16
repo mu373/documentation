@@ -159,7 +159,7 @@ class ResourceProcessor(Preprocessor):
                         img_file.write_bytes(img_data)
                         
                         # Update reference
-                        new_data[mime_type] = f"/notebooks/{self.notebook_name}/{filename}"
+                        new_data[mime_type] = f"/img/notebooks/{self.notebook_name}/{filename}"
                     else:
                         new_data[mime_type] = data
                 output["data"] = new_data
