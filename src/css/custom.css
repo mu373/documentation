@@ -30,17 +30,19 @@ html {
 }
 
 .markdown {
+  header {
+    margin-top: 1em;
+  }
   h1 {
-    --ifm-h1-font-size: 2.3rem !important;
-    font-size: var(--ifm-h1-font-size);
+    --ifm-h1-font-size: 2.1rem !important;
   }
   h2 {
-    --ifm-h2-font-size: 1.8rem !important;
+    --ifm-h2-font-size: 1.5rem !important;
     padding-bottom: .2em;
     border-bottom: 1px solid #dadada;
   }
   h3 {
-    --ifm-h3-font-size: 1.5rem !important;
+    --ifm-h3-font-size: 1.2rem !important;
   }
 }
 
