@@ -17,7 +17,7 @@
   pre {
     background: none !important;
     /* padding: 0 1em; */
-    border: 1px solid #dfdfdf;
+    border: var(--codeblock-border-color) solid 1px;
     border-radius: 0.25em;
     code {
       font-size: 0.95em;

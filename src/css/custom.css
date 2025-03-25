@@ -14,8 +14,12 @@
   --ifm-color-primary-lighter: #0061df;
   --ifm-color-primary-lightest: #006cfa;
   --ifm-global-shadow-lw: 0;
-  --prism-background-color: #f5f5f5;
   
+}
+
+[data-theme='light'] {
+  --prism-background-color: #f5f5f5;
+  --codeblock-border-color: #e0e0e0;
 }
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
@@ -26,6 +30,8 @@
   --ifm-color-primary-light: #47c2ff;
   --ifm-color-primary-lighter: #55c7ff;
   --ifm-color-primary-lightest: #82d5ff;
+  --prism-background-color: #2a2c2e33;
+  --codeblock-border-color: #404040;
 }
 
 html {
@@ -66,7 +72,7 @@ hr {
 .theme-code-block pre {
   background-color: var(--prism-background-color) !important;
   border-radius: 0.25em;
-  border: #e0e0e0 solid 1px;
+  border: var(--codeblock-border-color) solid 1px;
 }
 
 .theme-code-block :has(+ .jupyter-output_src-components-CodeOutputBlock-CodeOutputBlock-module) {
