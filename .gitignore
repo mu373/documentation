@@ -8,6 +8,8 @@
 # Intermediate builds
 /_intermediate
 
+# Images extracted from notebooks
+static/img/notebooks/
 
 # Generated files
 .docusaurus
