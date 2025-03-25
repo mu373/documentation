@@ -29,6 +29,9 @@ html {
   scroll-behavior: smooth;
 }
 
+.container {
+  --ifm-spacing-horizontal: 2.5rem;
+}
 .markdown {
   header {
     margin-top: 1em;
