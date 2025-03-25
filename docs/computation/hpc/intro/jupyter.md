@@ -129,7 +129,8 @@ Host c0001
 Since Slurm allocates you node(s) that are available at that moment, the hostname (e.g., `c0001`) would probably be different for every job that you request. This means you need to set up a new configuration for different computing nodes.
 
 If you want to specify the node for the job, you could add the `--nodelist` option in the batch file. The `c0001` part should point to the available node in your partition.
-```
+
+```txt
 #SBATCH --nodelist=c0001
 ```
 
