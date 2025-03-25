@@ -28,6 +28,11 @@
 html {
   scroll-behavior: smooth;
 }
+
+.dataframe th, .dataframe td {
+  line-height: 0.2em;
+}
+
 .jupyter-output-image {
   img {
     zoom: 50%;
