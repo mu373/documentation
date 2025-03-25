@@ -334,6 +334,17 @@ def convert_section_to_markdown(
     return body, output_path
 
 
+def generate_gitignore(dir: Path):
+    gitignore_path = dir / ".gitignore"
+
+    # This ignores auto-generated markdown files
+    if not gitignore_path.exists():
+        with open(gitignore_path, "w") as f:
+            f.write("autogen-*.mdx\n")
+            f.write("index.mdx\n")
+    
+    return gitignore_path
+
 def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) -> List[Path]:
     """Convert a notebook to multiple markdown files based on pagebreak splits."""
     # Read notebook
@@ -348,6 +359,9 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
     # Create directories
     notebook_dir.mkdir(parents=True, exist_ok=True)
     static_dir.mkdir(parents=True, exist_ok=True)
+
+    # Generate .gitignore for the generated notebook directory
+    generate_gitignore(notebook_dir)
     
     # Generate index.md with content up to first pagebreak
     generate_chapter_index_md(nb, notebook_dir, static_dir)
