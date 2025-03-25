@@ -97,6 +97,7 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
+        {to: 'tags', label: 'Tags', position: 'left'},
         {to: 'https://minamiueda.com', label: 'About', position: 'right'},
         // {
         //   href: 'https://github.com/facebook/docusaurus',
