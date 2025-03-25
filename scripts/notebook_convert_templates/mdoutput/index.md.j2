@@ -40,9 +40,12 @@
 {%- endblock data_text -%}
 
 {%- block data_html scoped -%}
-```html
-{{ output.data['text/html'] | safe }} 
+<HTMLOutputBlock>
 ```
+{{ output.data['text/html'] | safe  }} 
+```
+</HTMLOutputBlock>
+hello
 {%- endblock data_html -%}
 
 {%- block data_jpg scoped -%}
