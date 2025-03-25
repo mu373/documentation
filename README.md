@@ -8,8 +8,31 @@ This website is built using [Docusaurus](https://docusaurus.io/), a modern stati
 $ yarn
 ```
 
-### Local Development
+### Converting notebooks
+```sh
+conda activate nbdoc
+python3 scripts/notebook_split_convert.py docs/network-science/notebook.ipynb .
+```
+This command converts Jupyter notebook into mdx files. It would be splitted into multiple files.
 
+At the beginning of the chapter, include raw cell with:
+```txt
+# !chapter
+---
+chapter-title: SIR model with PGF
+---
+```
+
+At the beginning of sections, include raw cell with:
+```txt
+# !pagebreak
+---
+title: Introduction
+slug: intro
+---
+```
+
+### Local Development
 ```
 $ yarn start
 ```
