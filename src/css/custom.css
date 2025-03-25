@@ -87,6 +87,7 @@ hr {
   img {
     zoom: 50%;
   }
+  margin-bottom: var(--ifm-leading);
 }
 
 .footer__copyright {

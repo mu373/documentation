@@ -1,6 +1,7 @@
 .wrapper {
   padding-left: var(--ifm-pre-padding);
   font-size: 0.75em;
+  margin-bottom: var(--ifm-leading);
 }
 
 .wrapper code,
