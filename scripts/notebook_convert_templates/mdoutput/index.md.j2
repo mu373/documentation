@@ -6,14 +6,13 @@
 ```
 {%- if 'magics_language' in cell.metadata  -%}
     {{ cell.metadata.magics_language}} 
-{%- elif 'name' in nb.metadata.get("language_info", {}) -%}
-    {{ nb.metadata.language_info.name }}
+{%- elif 'language' in nb.metadata.get("kernelspec", {}) -%}
+    {{ nb.metadata.kernelspec.language }}
 {%- endif %}
 {%- if 'title' in cell.metadata -%}
     {{ ' ' }}title="{{ cell.metadata.title }}"
 
 {%- endif %}
-{{ nb.metadata.language_info.name }}
 {{ cell.source}}
 ```
 {% endblock input %}
