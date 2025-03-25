@@ -28,6 +28,11 @@
 html {
   scroll-behavior: smooth;
 }
+.jupyter-output-image {
+  img {
+    zoom: 50%;
+  }
+}
 
 .footer__copyright {
   font-size: 80%;

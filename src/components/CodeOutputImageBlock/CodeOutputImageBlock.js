@@ -9,7 +9,7 @@ const CodeOutputImageBlock = ({ children, lang }) => {
   
   return (
     <div className="jupyter-output-image">
-      <img src={imageUrl} alt="output plot" width="50%"/>
+      <img src={imageUrl} alt="output plot"/>
     </div>
   );
 };
