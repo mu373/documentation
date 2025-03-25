@@ -4,6 +4,11 @@
 # Production
 /build
 
+
+# Intermediate builds
+/_intermediate
+
+
 # Generated files
 .docusaurus
 .cache-loader
