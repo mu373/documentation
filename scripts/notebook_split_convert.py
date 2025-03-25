@@ -57,8 +57,14 @@ class EscapePreprocessor(Preprocessor):
                     elif "data" in output:
                         for key, value in output["data"].items():
                             if isinstance(value, str):
-                                escaped_value = self.escape_html(value.replace("```", r"\`\`\`"))
-                                output["data"][key] = escaped_value
+                                if key == "text/html":
+                                   # Only replace triple backticks in HTML output.
+                                   escaped_value = value.replace("```", r"\`\`\`")
+                                   output["data"][key] = escaped_value
+                                else: 
+                                    # Replace triple backticks, then escape HTML special characters.
+                                    escaped_value = self.escape_html(value.replace("```", r"\`\`\`"))
+                                    output["data"][key] = escaped_value
                 cell["outputs"] = [
                     output
                     for i, output in enumerate(cell["outputs"])
