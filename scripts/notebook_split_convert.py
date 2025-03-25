@@ -187,14 +187,20 @@ def parse_frontmatter(cell_source: str) -> Optional[Dict]:
     except yaml.YAMLError:
         return None
 
-def generate_chapter_index_md(nb, output_dir: Path):
+def generate_chapter_index_md(nb, output_dir: Path, static_dir: Path):
+    """Generate index.md file for a chapter with content up to first pagebreak."""
+    # Find chapter frontmatter and first pagebreak
+    chapter_frontmatter_index = None
+    index_frontmatter = None
+    
     for i, cell in enumerate(nb.cells):
         if cell.cell_type == "raw" and "# !chapter" in cell.source:
             index_frontmatter = cell.source.split("# !chapter", 1)[1].strip()
-            break;
+            chapter_frontmatter_index = i
+            break
     
     # Check if frontmatter exists 
-    if not 'index_frontmatter' in locals():
+    if index_frontmatter is None:
         print("Warning: No chapter frontmatter found in notebook")
         index_frontmatter = "---\ntitle: Untitled\n---\n"
     else:
@@ -204,10 +210,49 @@ def generate_chapter_index_md(nb, output_dir: Path):
     # Create directories
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Write the index file
-    index_path = output_dir / "index.md"
-    with open(index_path, "w") as f:
-        f.write(index_frontmatter)
+    # Find first pagebreak
+    first_pagebreak_index = None
+    for i, cell in enumerate(nb.cells):
+        if cell.cell_type == "raw" and "# !pagebreak" in cell.source:
+            first_pagebreak_index = i
+            break
+    
+    # Create a notebook with cells up to first pagebreak for index.md
+    index_nb = nbformat.v4.new_notebook(metadata=nb.metadata)
+    
+    # Add cells between chapter frontmatter and first pagebreak (or end)
+    if chapter_frontmatter_index is not None:
+        start_index = chapter_frontmatter_index + 1
+        end_index = first_pagebreak_index if first_pagebreak_index is not None else len(nb.cells)
+        index_nb.cells = nb.cells[start_index:end_index]
+    
+    # Write the index file with preprocessed content if there are cells
+    index_path = output_dir / "index.mdx"
+    
+    # Use preprocessors if we have cells to process
+    if index_nb.cells:
+        notebook_name = output_dir.name  # Get notebook name from directory
+        
+        # Setup exporters with the same preprocessors used for regular conversions
+        exporter = MarkdownExporter(
+            preprocessors=[
+                EscapePreprocessor,
+                ResourceProcessor(static_dir, notebook_name)
+            ],
+            template_name="mdoutput",
+            extra_template_basedirs=["./scripts/notebook_convert_templates"],
+        )
+        
+        # Convert to markdown
+        body, resources = exporter.from_notebook_node(index_nb)
+        
+        # Write with frontmatter + processed body
+        with open(index_path, "w") as f:
+            f.write(index_frontmatter + "\n\n" + body)
+    else:
+        # Just write frontmatter if no content cells
+        with open(index_path, "w") as f:
+            f.write(index_frontmatter)
     
     return index_path
 
@@ -221,22 +266,15 @@ def split_notebook_cells(nb: nbformat.NotebookNode) -> List[List[nbformat.Notebo
             pagebreak_indices.append(i)
     
     # If no pagebreaks found, return the entire notebook as one section
+    # (excluding chapter frontmatter)
     if not pagebreak_indices:
-        return [nb.cells]
+        return [[cell for cell in nb.cells if "# !chapter" not in cell.source]]
     
     # Split cells into sections
     sections = []
     
-    # First section: all cells before the first pagebreak
-    if pagebreak_indices[0] > 0:
-        # add cells to sections if  cells  not starting with # !chapter
-        # sections.append(nb.cells[:pagebreak_indices[0]])
-
-        sections.append(
-            [cell for cell in nb.cells[:pagebreak_indices[0]] if "# !chapter" not in cell.source]
-        )
-    
-    # Process each pagebreak
+    # Skip the first section since it's included in index.mdx
+    # Process each pagebreak instead
     for i, pb_idx in enumerate(pagebreak_indices):
         # Get the raw cell with pagebreak
         pb_cell = nb.cells[pb_idx]
@@ -302,24 +340,24 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
     with open(notebook_path) as f:
         nb = nbformat.read(f, as_version=4)
     
-    # Split notebook into sections
+    # Setup directory structure
+    notebook_name = notebook_path.stem
+    notebook_dir = notebook_dir / notebook_name
+    static_dir = root_dir / "_intermediate" / "static"
+    
+    # Create directories
+    notebook_dir.mkdir(parents=True, exist_ok=True)
+    static_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Generate index.md with content up to first pagebreak
+    generate_chapter_index_md(nb, notebook_dir, static_dir)
+    
+    # Split notebook into sections (starting after first pagebreak)
     sections = split_notebook_cells(nb)
 
     if not sections:
         print(f"Warning: No valid sections found in {notebook_path}")
         return []
-    
-    # Setup directory structure
-    notebook_name = notebook_path.stem
-    # notebook_dir = root_dir / "_intermediate" / "docs" / notebook_name
-    # static_dir = root_dir / "_intermediate"  / "static"
-    notebook_dir = notebook_dir / notebook_name
-    static_dir = root_dir / "_intermediate"  / "static"
-    generate_chapter_index_md(nb, notebook_dir)
-    
-    # Create directories
-    notebook_dir.mkdir(parents=True, exist_ok=True)
-    static_dir.mkdir(parents=True, exist_ok=True)
     
     # Process each section
     output_paths = []
