@@ -13,6 +13,9 @@
   --ifm-color-primary-light: #005cd5;
   --ifm-color-primary-lighter: #0061df;
   --ifm-color-primary-lightest: #006cfa;
+  --ifm-global-shadow-lw: 0;
+  --prism-background-color: #f5f5f5;
+  
 }
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
@@ -53,6 +56,22 @@ hr {
   margin: 2em 0;
 }
 
+.theme-code-block {
+  pre code {
+  font-size: 0.95em;
+  line-height: 1.3em;
+  }
+}
+
+.theme-code-block pre {
+  background-color: var(--prism-background-color) !important;
+  border-radius: 0.25em;
+  border: #e0e0e0 solid 1px;
+}
+
+.theme-code-block :has(+ .jupyter-output_src-components-CodeOutputBlock-CodeOutputBlock-module) {
+  margin-bottom: 5px;
+}
 
 .dataframe th, .dataframe td {
   line-height: 0.2em;
