@@ -1,6 +1,8 @@
 ---
 sidebar_position: 10
 slug: vscode
+tags:
+  - Jupyter
 ---
 
 # Discovery with VS Code

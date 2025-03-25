@@ -1,6 +1,8 @@
 ---
 sidebar_position: 4
 slug: public-key
+tags:
+  - SSH
 ---
 
 # Public key

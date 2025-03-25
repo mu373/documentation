@@ -1,6 +1,9 @@
 ---
 sidebar_position: 11
 slug: vscode-jupyter
+tags:
+  - Jupyter
+  - VSCode
 ---
 
 # Jupyter on VS Code

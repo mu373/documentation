@@ -1,6 +1,8 @@
 ---
 sidebar_position: 5
 slug: ssh
+tags:
+  - SSH
 ---
 
 # Remote Access with SSH

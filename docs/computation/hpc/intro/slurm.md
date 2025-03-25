@@ -1,6 +1,8 @@
 ---
 sidebar_position: 8
 slug: slurm
+tags:
+  - Slurm
 ---
 
 # Slurm

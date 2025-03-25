@@ -1,6 +1,8 @@
 ---
 sidebar_position: 10
 slug: jupyter
+tags:
+  - Jupyter
 ---
 
 # Jupyter Lab
