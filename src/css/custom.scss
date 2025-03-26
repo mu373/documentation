@@ -14,6 +14,7 @@
   --ifm-color-primary-lighter: #0061df;
   --ifm-color-primary-lightest: #006cfa;
   --ifm-global-shadow-lw: 0;
+  --h2-border-color: var(--codeblock-border-color);
   
 }
 
@@ -61,7 +62,7 @@ html {
   h2 {
     --ifm-h2-font-size: 1.5rem !important;
     padding-bottom: .2em;
-    border-bottom: 1px solid #dadada;
+    border-bottom: 1px solid var(--h2-border-color);
   }
   h3 {
     --ifm-h3-font-size: 1.2rem !important;
