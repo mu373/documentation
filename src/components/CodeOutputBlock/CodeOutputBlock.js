@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from "./CodeOutputBlock.module.css";
+import styles from "./CodeOutputBlock.module.scss";
 
 const CodeOutputBlock = ({ children, lang }) => {
   
