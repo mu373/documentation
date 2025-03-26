@@ -27,8 +27,8 @@ class EscapePreprocessor(Preprocessor):
         text = text.replace("&", "&amp;")
         text = text.replace("<", "&lt;")
         text = text.replace(">", "&gt;")
-        text = text.replace('"', "&quot;")
-        text = text.replace("'", "&#39;")
+        # text = text.replace('"', "&quot;")
+        # text = text.replace("'", "&#39;")
         return text
 
     def preprocess_cell(self, cell, resources, cell_index):
