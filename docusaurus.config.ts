@@ -63,7 +63,7 @@ const config: Config = {
         //   onUntruncatedBlogPosts: 'warn',
         // },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: './src/css/custom.scss',
         },
       } satisfies Preset.Options,
     ],
@@ -78,6 +78,8 @@ const config: Config = {
       crossorigin: 'anonymous',
     },
   ],
+
+  plugins: ['docusaurus-plugin-sass'],
 
   themeConfig: {
     // Replace with your project's social card
