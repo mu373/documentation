@@ -33,12 +33,17 @@ class EscapePreprocessor(Preprocessor):
 
     def preprocess_cell(self, cell, resources, cell_index):
         if cell.cell_type == "markdown":
-            # Rewrite .ipynb links to .md links.
-            cell.source = re.sub(
-                r"\[([^\]]*)\]\((?![^\)]*//)([^)]*)\.ipynb\)",
-                r"[\1](\2.md)",
-                cell.source,
-            )
+
+            # Don't include cells with {"hide": true} in metadata
+            if "hide" in cell.get("metadata", {}) and cell.metadata.hide == True:
+                cell.source = ""
+            else:
+                # Rewrite .ipynb links to .md links.
+                cell.source = re.sub(
+                    r"\[([^\]]*)\]\((?![^\)]*//)([^)]*)\.ipynb\)",
+                    r"[\1](\2.md)",
+                    cell.source,
+                )
 
         elif cell.cell_type == "code":
             # Escape triple backticks in code cells.
