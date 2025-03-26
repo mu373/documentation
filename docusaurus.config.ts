@@ -108,6 +108,10 @@ const config: Config = {
         // },
       ],
     },
+    tableOfContents: {
+      minHeadingLevel: 2,
+      maxHeadingLevel: 6,
+    },
     footer: {
       style: 'dark',
       links: [
