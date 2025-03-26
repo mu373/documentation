@@ -45,6 +45,13 @@ class EscapePreprocessor(Preprocessor):
                     cell.source,
                 )
 
+                # Heading levels
+                cell.source = re.sub(
+                    r"(^#)(#.*) (.*)",
+                    r"\2 \3",
+                    cell.source,
+                )
+
         elif cell.cell_type == "code":
             # Escape triple backticks in code cells.
             cell.source = cell.source.replace("```", r"\`\`\`")
