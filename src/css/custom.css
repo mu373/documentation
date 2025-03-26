@@ -62,19 +62,6 @@ hr {
   margin: 2em 0;
 }
 
-.theme-code-block {
-  pre code {
-  font-size: 0.95em;
-  line-height: 1.3em;
-  }
-}
-
-.theme-code-block pre {
-  background-color: var(--prism-background-color) !important;
-  border-radius: 0.25em;
-  border: var(--codeblock-border-color) solid 1px;
-}
-
 .theme-code-block :has(+ .jupyter-output_src-components-CodeOutputBlock-CodeOutputBlock-module) {
   margin-bottom: 5px;
 }
