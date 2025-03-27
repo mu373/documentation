@@ -42,7 +42,7 @@ const config: Config = {
           routeBasePath: '/',
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],
-          editUrl: 'https://github.com/mu373/documentation/edit/main/',
+          editUrl: 'https://github.com/mu373/documentation/blob/main/',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           // editUrl:
