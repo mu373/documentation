@@ -15,7 +15,6 @@
   --ifm-color-primary-lightest: #006cfa;
   --ifm-global-shadow-lw: 0;
   --h2-border-color: var(--codeblock-border-color);
-  
 }
 
 [data-theme='light'] {
@@ -53,6 +52,9 @@ html {
   --ifm-spacing-horizontal: 2.5rem;
 }
 .markdown {
+  --ifm-leading: 0.8em;
+  --ifm-heading-vertical-rhythm-bottom: 0.6;
+  --ifm-h3-vertical-rhythm-top: 1.8;
   header {
     margin-top: 1em;
   }
@@ -65,7 +67,9 @@ html {
     border-bottom: 1px solid var(--h2-border-color);
   }
   h3 {
-    --ifm-h3-font-size: 1.2rem !important;
+    --ifm-h3-font-size: 1.15rem !important;
+  }
+  p {
   }
 }
 
