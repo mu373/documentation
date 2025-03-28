@@ -65,6 +65,20 @@ Using Vercel:
 
 Connect the GitHub repository to Vercel. Once build succeeds, the website will be available at `https://your-vercel-project-name.vercel/docs/`.
 
+
+## Writing documents
+
+### Frontmatter
+```txt
+title: Lorem Ipsum
+hide_title: false # Optional: You can hide the title (h1).
+slug: /
+tags:
+  - notes
+sidebar_position: 1
+custom_edit_url: "" # Optional: Use this field to customize "edit" or "view source" link. Set empty value to hide.
+```
+
 ### References
 - [Docs only mode](https://docusaurus.io/docs/docs-introduction#docs-only-mode)
 - [Using /docs directory for baseUrl](https://github.com/facebook/docusaurus/issues/6294)
