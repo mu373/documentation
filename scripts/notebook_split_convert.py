@@ -185,14 +185,14 @@ def setup_exporter(static_dir: Path, notebook_name: str) -> MarkdownExporter:
         extra_template_basedirs=["./scripts/notebook_convert_templates"],
     )
 
-def convert_single_file(
+def export_notebook_cell_to_mdx(
     nb: nbformat.NotebookNode, 
     output_path: Path, 
     static_dir: Path, 
     notebook_name: str,
     frontmatter: str = None
 ) -> Path:
-    """Convert a notebook to a single MDX file."""
+    """Convert a notebook to a single MDX file with frontmatter."""
     # Make a copy of the notebook to avoid modifying the original
     nb_copy = nbformat.v4.new_notebook(metadata=nb.metadata)
     nb_copy.cells = [cell for cell in nb.cells]
@@ -252,7 +252,7 @@ def generate_chapter_index_md(
     # Convert to markdown if we have cells
     if index_nb.cells:
         notebook_name = output_dir.name  # Get notebook name from directory
-        return convert_single_file(
+        return export_notebook_cell_to_mdx(
             index_nb, 
             index_path, 
             static_dir, 
@@ -266,8 +266,8 @@ def generate_chapter_index_md(
         return index_path
 
 
-def split_notebook_cells(nb: nbformat.NotebookNode) -> List[List[nbformat.NotebookNode]]:
-    """Split notebook cells into sections based on # !pagebreak markers."""
+def split_notebook_cells(nb: nbformat.NotebookNode) -> List[Tuple[List[nbformat.NotebookNode], Optional[str]]]:
+    """Split notebook cells into sections based on # !pagebreak markers, returning cells and frontmatter."""
     # Find all indices of cells containing pagebreaks
     pagebreak_indices = []
     for i, cell in enumerate(nb.cells):
@@ -277,7 +277,7 @@ def split_notebook_cells(nb: nbformat.NotebookNode) -> List[List[nbformat.Notebo
     # If no pagebreaks found, return the entire notebook as one section
     # (excluding chapter frontmatter)
     if not pagebreak_indices:
-        return [[cell for cell in nb.cells if "# !chapter" not in cell.source]]
+        return [([cell for cell in nb.cells if "# !chapter" not in cell.source], None)]
     
     # Split cells into sections
     sections = []
@@ -288,7 +288,19 @@ def split_notebook_cells(nb: nbformat.NotebookNode) -> List[List[nbformat.Notebo
         pb_cell = nb.cells[pb_idx]
         
         # Extract content after pagebreak
-        content_after_pb = pb_cell.source.split("# !pagebreak", 1)[1].strip()
+        parts = pb_cell.source.split("# !pagebreak", 1)
+        content_after_pb = parts[1].strip() if len(parts) > 1 else ""
+        
+        # Extract frontmatter if it exists
+        section_frontmatter = None
+        if content_after_pb:
+            # Check if the content has frontmatter
+            if content_after_pb.startswith("---"):
+                # Extract frontmatter between --- markers
+                fm_end = content_after_pb.find("---", 3)
+                if fm_end > 0:
+                    section_frontmatter = content_after_pb[:fm_end + 3]
+                    content_after_pb = content_after_pb[fm_end + 3:].strip()
         
         # Start a new section
         section_cells = []
@@ -304,7 +316,7 @@ def split_notebook_cells(nb: nbformat.NotebookNode) -> List[List[nbformat.Notebo
         
         # Add the section if it has cells
         if section_cells:
-            sections.append(section_cells)
+            sections.append((section_cells, section_frontmatter))
     
     return sections
 
@@ -324,7 +336,7 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
     if not has_pagebreaks(nb):
         # For single-pagers, create a single MDX file in the same directory
         output_path = notebook_dir / f"{notebook_name}.mdx"
-        result = convert_single_file(nb, output_path, static_dir, notebook_name)
+        result = export_notebook_cell_to_mdx(nb, output_path, static_dir, notebook_name)
         append_to_gitignore(output_path)
         return [result]
     
@@ -347,7 +359,7 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
     
     # Process each section
     output_paths = [index_path]
-    for i, section in enumerate(sections, 1):
+    for i, (section, section_frontmatter) in enumerate(sections, 1):
         try:
             # Create new notebook with just this section's cells
             section_nb = nbformat.v4.new_notebook(metadata=nb.metadata)
@@ -355,7 +367,7 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
             
             # Convert to markdown
             output_path = multi_page_dir / f"autogen-page-{i}.mdx"
-            convert_single_file(section_nb, output_path, static_dir, notebook_name)
+            export_notebook_cell_to_mdx(section_nb, output_path, static_dir, notebook_name, frontmatter=section_frontmatter)
             
             output_paths.append(output_path)
             
