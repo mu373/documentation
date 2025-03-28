@@ -346,6 +346,14 @@ def convert_section_to_markdown(
     return body, output_path
 
 
+def has_pagebreaks(nb: nbformat.NotebookNode) -> bool:
+    """Check if notebook contains pagebreak markers."""
+    for cell in nb.cells:
+        if cell.cell_type == "raw" and "# !pagebreak" in cell.source:
+            return True
+    return False
+
+
 def generate_gitignore(dir: Path):
     gitignore_path = dir / ".gitignore"
 
@@ -357,13 +365,89 @@ def generate_gitignore(dir: Path):
     
     return gitignore_path
 
+
+def append_to_gitignore(file_path: Path):
+    """Append a file pattern to .gitignore in the same directory."""
+    gitignore_path = file_path.parent / ".gitignore"
+    
+    # Create gitignore if it doesn't exist
+    if not gitignore_path.exists():
+        with open(gitignore_path, "w") as f:
+            f.write(f"{file_path.name}\n")
+    else:
+        # Append to existing gitignore if the pattern isn't already there
+        with open(gitignore_path, "r") as f:
+            content = f.read()
+        
+        if file_path.name not in content:
+            with open(gitignore_path, "a") as f:
+                f.write(f"\n{file_path.name}\n")
+    
+    return gitignore_path
+
+
+def convert_single_notebook(notebook_path: Path, output_path: Path, root_dir: Path) -> Path:
+    """Convert a notebook to a single MDX file without splitting."""
+    # Read notebook
+    with open(notebook_path) as f:
+        nb = nbformat.read(f, as_version=4)
+    
+    # Setup directories for static resources
+    notebook_name = notebook_path.stem
+    static_dir = root_dir / "_intermediate" / "static"
+    static_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Setup exporter with resource handling
+    exporter = MarkdownExporter(
+        preprocessors=[
+            EscapePreprocessor,
+            ResourceProcessor(static_dir, notebook_name)
+        ],
+        template_name="mdoutput",
+        extra_template_basedirs=["./scripts/notebook_convert_templates"],
+    )
+    
+    # Extract frontmatter if available
+    frontmatter = ""
+    for i, cell in enumerate(nb.cells):
+        if cell.cell_type == "raw" and "# !chapter" in cell.source:
+            frontmatter = cell.source.split("# !chapter", 1)[1].strip()
+            # Replace "chapter-title:" with "title:" in frontmatter
+            frontmatter = frontmatter.replace("chapter-title:", "title:")
+            # Remove this cell from notebook for conversion
+            nb.cells.pop(i)
+            break
+    
+    if not frontmatter:
+        frontmatter = "---\ntitle: Untitled\n---\n"
+    
+    # Convert to markdown
+    body, resources = exporter.from_notebook_node(nb)
+    
+    # Write markdown file with frontmatter
+    with open(output_path, "w") as f:
+        f.write(frontmatter + "\n\n" + body)
+    
+    # Add to gitignore
+    append_to_gitignore(output_path)
+    
+    print(f"Created {output_path}")
+    return output_path
+
+
 def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) -> List[Path]:
     """Convert a notebook to multiple markdown files based on pagebreak splits."""
     # Read notebook
     with open(notebook_path) as f:
         nb = nbformat.read(f, as_version=4)
     
-    # Setup directory structure
+    # Check if this is a single-pager notebook (no pagebreaks)
+    if not has_pagebreaks(nb):
+        # For single-pagers, create a single MDX file in the same directory
+        output_path = notebook_dir / f"{notebook_path.stem}.mdx"
+        return [convert_single_notebook(notebook_path, output_path, root_dir)]
+    
+    # For multi-page notebooks, continue with the existing directory-based approach
     notebook_name = notebook_path.stem
     notebook_dir = notebook_dir / notebook_name
     static_dir = root_dir / "_intermediate" / "static"
