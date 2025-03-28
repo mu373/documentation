@@ -1,6 +1,6 @@
 # documentation
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Available at https://minamiueda.com/docs/. This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
 ## Usage
 
