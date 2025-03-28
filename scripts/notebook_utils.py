@@ -2,6 +2,10 @@ from pathlib import Path
 from typing import Tuple
 import nbformat
 
+# GitHub configuration
+GITHUB_USERNAME = "mu373"
+GITHUB_REPO = "documentation"
+
 def escape_html(text):
     """
     Escape HTML special characters in the given text.
@@ -21,8 +25,12 @@ def escape_html(text):
     # text = text.replace("'", "&#39;")
     return text
 
-def extract_frontmatter(nb: nbformat.NotebookNode) -> Tuple[str, int]:
+def extract_frontmatter(nb: nbformat.NotebookNode, notebook_path: str = None) -> Tuple[str, int]:
     """Extract frontmatter from notebook if it exists.
+    
+    Args:
+        nb: The notebook object
+        notebook_path: Path to the original notebook file (to construct the edit URL)
     
     Returns:
         Tuple[str, int]: The frontmatter content and the index of the frontmatter cell.
@@ -42,8 +50,40 @@ def extract_frontmatter(nb: nbformat.NotebookNode) -> Tuple[str, int]:
     if not frontmatter:
         frontmatter = "---\ntitle: Untitled\n---\n"
     
+    # Add custom edit URL if notebook path is provided
+    if notebook_path:
+        # Make sure frontmatter has the proper format
+        if not frontmatter.startswith("---\n"):
+            frontmatter = "---\n" + frontmatter
+        if not "---" in frontmatter[3:]:
+            frontmatter = frontmatter + "\n---\n"
+        
+        # Remove trailing "---" to add our custom_edit_url
+        if frontmatter.endswith("---\n"):
+            frontmatter = frontmatter[:-4]
+        
+        # Insert custom_edit_url before the closing "---"
+        # Always use the original notebook path for the edit URL
+        edit_url = f"https://github.com/{GITHUB_USERNAME}/{GITHUB_REPO}/blob/main/{notebook_path}"
+        frontmatter_lines = frontmatter.split("\n")
+        
+        # Find the position to insert the custom_edit_url
+        insert_pos = -1
+        for i, line in enumerate(frontmatter_lines):
+            if line.strip() == "---" and i > 0:
+                insert_pos = i
+                break
+        
+        if insert_pos > 0:
+            frontmatter_lines.insert(insert_pos, f"custom_edit_url: \"{edit_url}\"")
+        else:
+            # If no closing "---" found, add it at the end
+            frontmatter_lines.append(f"custom_edit_url: \"{edit_url}\"")
+            frontmatter_lines.append("---")
+        
+        frontmatter = "\n".join(frontmatter_lines)
+    
     return frontmatter, cell_index
-
 
 def has_pagebreaks(nb: nbformat.NotebookNode) -> bool:
     """Check if notebook contains pagebreak markers."""

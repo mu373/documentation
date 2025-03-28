@@ -190,16 +190,26 @@ def export_notebook_cell_to_mdx(
     output_path: Path, 
     static_dir: Path, 
     notebook_name: str,
-    frontmatter: str = None
+    frontmatter: str = None,
+    notebook_path: str = None
 ) -> Path:
-    """Convert a notebook to a single MDX file with frontmatter."""
+    """Convert a notebook to a single MDX file with frontmatter.
+    
+    Args:
+        nb: The notebook object
+        output_path: Path where the MDX file will be written
+        static_dir: Directory for static assets like images
+        notebook_name: Name of the notebook (used for image paths)
+        frontmatter: Optional frontmatter string. If None, extracted from notebook.
+        notebook_path: Path to the notebook file (to construct the edit URL)
+    """
     # Make a copy of the notebook to avoid modifying the original
     nb_copy = nbformat.v4.new_notebook(metadata=nb.metadata)
     nb_copy.cells = [cell for cell in nb.cells]
     
     # Extract frontmatter if not provided
     if frontmatter is None:
-        frontmatter, frontmatter_idx = extract_frontmatter(nb_copy)
+        frontmatter, frontmatter_idx = extract_frontmatter(nb_copy, notebook_path)
         # Remove frontmatter cell if found
         if frontmatter_idx is not None:
             nb_copy.cells.pop(frontmatter_idx)
@@ -218,14 +228,40 @@ def export_notebook_cell_to_mdx(
     return output_path
 
 
+def extract_edit_url_from_frontmatter(frontmatter: str) -> str:
+    """Extract custom_edit_url from frontmatter if it exists."""
+    if not frontmatter:
+        return None
+        
+    match = re.search(r'custom_edit_url:\s*"([^"]+)"', frontmatter)
+    if match:
+        return match.group(1)
+    return None
+
+
+def ensure_ipynb_extension(url: str) -> str:
+    """Ensure the URL points to an .ipynb file."""
+    if not url:
+        return url
+    
+    # If URL ends with .mdx, change to .ipynb
+    if url.endswith('.mdx'):
+        return url[:-4] + '.ipynb'
+    # If URL doesn't have an extension, add .ipynb
+    elif not url.endswith('.ipynb'):
+        return url + '.ipynb'
+    return url
+
+
 def generate_chapter_index_md(
     nb: nbformat.NotebookNode, 
     output_dir: Path, 
-    static_dir: Path
-) -> Path:
+    static_dir: Path,
+    notebook_path: str = None
+) -> Tuple[Path, str]:
     """Generate index.md file for a chapter with content up to first pagebreak."""
-    # Extract frontmatter
-    frontmatter, frontmatter_idx = extract_frontmatter(nb)
+    # Extract frontmatter with the notebook path (to get correct edit URL)
+    frontmatter, frontmatter_idx = extract_frontmatter(nb, notebook_path)
     
     # Create directories
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -258,12 +294,12 @@ def generate_chapter_index_md(
             static_dir, 
             notebook_name, 
             frontmatter=frontmatter
-        )
+        ), frontmatter
     else:
         # Just write frontmatter if no content cells
         with open(index_path, "w") as f:
             f.write(frontmatter)
-        return index_path
+        return index_path, frontmatter
 
 
 def split_notebook_cells(nb: nbformat.NotebookNode) -> List[Tuple[List[nbformat.NotebookNode], Optional[str]]]:
@@ -321,6 +357,25 @@ def split_notebook_cells(nb: nbformat.NotebookNode) -> List[Tuple[List[nbformat.
     return sections
 
 
+def add_edit_url_to_frontmatter(frontmatter: str, edit_url: str) -> str:
+    """Add custom_edit_url to section frontmatter."""
+    if not frontmatter:
+        return f"---\ncustom_edit_url: \"{edit_url}\"\n---\n"
+    
+    # Check if frontmatter already has custom_edit_url
+    if "custom_edit_url:" in frontmatter:
+        return frontmatter
+        
+    # Add custom_edit_url before closing ---
+    if frontmatter.endswith("---\n"):
+        return frontmatter[:-4] + f"custom_edit_url: \"{edit_url}\"\n---\n"
+    elif frontmatter.endswith("---"):
+        return frontmatter[:-3] + f"custom_edit_url: \"{edit_url}\"\n---"
+    else:
+        # If no closing ---, add it
+        return frontmatter + f"\ncustom_edit_url: \"{edit_url}\"\n---\n"
+
+
 def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) -> List[Path]:
     """Convert a notebook to markdown files, handling both single and multi-page notebooks."""
     # Read notebook
@@ -332,11 +387,20 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
     static_dir = root_dir / "_intermediate" / "static" / "img"
     static_dir.mkdir(parents=True, exist_ok=True)
     
+    # Calculate relative path for GitHub edit URL - always use the original notebook path
+    original_notebook_path = str(notebook_path.relative_to(root_dir))
+    
     # Check if this is a single-pager notebook (no pagebreaks)
     if not has_pagebreaks(nb):
         # For single-pagers, create a single MDX file in the same directory
         output_path = notebook_dir / f"{notebook_name}.mdx"
-        result = export_notebook_cell_to_mdx(nb, output_path, static_dir, notebook_name)
+        result = export_notebook_cell_to_mdx(
+            nb, 
+            output_path, 
+            static_dir, 
+            notebook_name, 
+            notebook_path=original_notebook_path
+        )
         append_to_gitignore(output_path)
         return [result]
     
@@ -347,8 +411,16 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
     # Generate .gitignore for the generated notebook directory
     generate_directory_gitignore(multi_page_dir)
     
-    # Generate index.md with content up to first pagebreak
-    index_path = generate_chapter_index_md(nb, multi_page_dir, static_dir)
+    # Generate index.md with content up to first pagebreak - pass the original notebook path
+    index_path, chapter_frontmatter = generate_chapter_index_md(
+        nb, 
+        multi_page_dir, 
+        static_dir, 
+        notebook_path=original_notebook_path
+    )
+    
+    # Extract edit URL from chapter frontmatter - this will be the URL to the original notebook
+    edit_url = extract_edit_url_from_frontmatter(chapter_frontmatter)
     
     # Split notebook into sections
     sections = split_notebook_cells(nb)
@@ -357,7 +429,7 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
         print(f"Warning: No valid sections found in {notebook_path}")
         return [index_path]
     
-    # Process each section
+    # Process each section - use the same edit URL for all sections
     output_paths = [index_path]
     for i, (section, section_frontmatter) in enumerate(sections, 1):
         try:
@@ -365,9 +437,21 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
             section_nb = nbformat.v4.new_notebook(metadata=nb.metadata)
             section_nb.cells = section
             
+            # Add edit URL to section frontmatter if available
+            if edit_url and section_frontmatter:
+                section_frontmatter = add_edit_url_to_frontmatter(section_frontmatter, edit_url)
+            elif edit_url:
+                section_frontmatter = f"---\ncustom_edit_url: \"{edit_url}\"\n---\n"
+            
             # Convert to markdown
             output_path = multi_page_dir / f"autogen-page-{i}.mdx"
-            export_notebook_cell_to_mdx(section_nb, output_path, static_dir, notebook_name, frontmatter=section_frontmatter)
+            export_notebook_cell_to_mdx(
+                section_nb, 
+                output_path, 
+                static_dir, 
+                notebook_name, 
+                frontmatter=section_frontmatter
+            )
             
             output_paths.append(output_path)
             
