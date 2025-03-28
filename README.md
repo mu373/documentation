@@ -2,6 +2,8 @@
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
+## Usage
+
 ### Installation
 
 ```
@@ -69,14 +71,16 @@ Connect the GitHub repository to Vercel. Once build succeeds, the website will b
 ## Writing documents
 
 ### Frontmatter
-```txt
+```yaml
+---
 title: Lorem Ipsum
 hide_title: false # Optional: You can hide the title (h1).
-slug: /
+slug: lorem-ipsum # Custom URL
 tags:
   - notes
 sidebar_position: 1
 custom_edit_url: "" # Optional: Use this field to customize "edit" or "view source" link. Set empty value to hide.
+---
 ```
 
 ### References
