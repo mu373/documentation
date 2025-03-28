@@ -12,6 +12,9 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
+    "nb-convert": "python scripts/convert_all_notebooks.py",
+    "nb-copy-image": "bash scripts/copy_notebook_images.sh",
+    "nb-build": "yarn run nb-convert && yarn run nb-copy-image",
     "typecheck": "tsc"
   },
   "dependencies": {
