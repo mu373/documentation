@@ -7,7 +7,7 @@ import time
 from typing import List, Dict
 
 # Import the convert_notebook function from the notebook_split_convert module
-from notebook_split_convert import convert_notebook
+from notebook_convert import convert_notebook
 
 def find_notebooks(directory: Path) -> List[Path]:
     """Find all Jupyter notebook files recursively in a directory."""
