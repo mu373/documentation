@@ -12,27 +12,21 @@ $ yarn
 
 ### Converting notebooks
 ```sh
-conda activate nbdoc
-python3 scripts/notebook_split_convert.py docs/network-science/notebook.ipynb .
-```
-This command converts Jupyter notebook into mdx files. It would be splitted into multiple files.
+# Install requirements
+pip install -r requirements.txt
 
-At the beginning of the chapter, include raw cell with:
-```txt
-# !chapter
----
-chapter-title: SIR model with PGF
----
+# Convert notebooks to markdown
+# Use following command if the specific Python interpreter (for example from conda) you want to use is not detected
+# python3 python scripts/convert_all_notebooks.py .
+yarn nb-convert
+
+# Copy extracted images from notebook to static directory.
+yarn run nb-copy-image
+
+# Or run following. This runs nb-convert and nb-copy-image at once.
+yarn run nb-build
 ```
 
-At the beginning of sections, include raw cell with:
-```txt
-# !pagebreak
----
-title: Introduction
-slug: intro
----
-```
 
 ### Local Development
 ```
@@ -49,25 +43,6 @@ $ yarn build
 
 This command generates static content into the `build/docs` directory and can be served using any static contents hosting service. You can change the target directory in `package.json` by changing the build command `"docusaurus build --out-dir build/docs`.
 
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-Using Vercel:
-
-Connect the GitHub repository to Vercel. Once build succeeds, the website will be available at `https://your-vercel-project-name.vercel/docs/`.
-
-
 ## Writing documents
 
 ### Frontmatter
@@ -83,6 +58,25 @@ custom_edit_url: "" # Optional: Use this field to customize "edit" or "view sour
 ---
 ```
 
-### References
+### Jupyter Notebooks
+
+At the beginning of the notebook, include raw cell with:
+```yaml
+# !chapter
+---
+chapter-title: My chapter title
+---
+```
+
+Optional: If you want to split a single notebook in to multiple pages in the documentation website, include the raw cell in the following format at the beginning of each sections. `# !pagebreak` is required to split pages.
+```yaml
+# !pagebreak
+---
+title: Introduction
+slug: intro
+---
+```
+
+## References
 - [Docs only mode](https://docusaurus.io/docs/docs-introduction#docs-only-mode)
 - [Using /docs directory for baseUrl](https://github.com/facebook/docusaurus/issues/6294)

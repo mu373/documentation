@@ -114,9 +114,10 @@ class ResourceProcessor(Preprocessor):
                     data = base64.b64decode(b64_data)
                     filename = hashlib.md5(data).hexdigest()[:12] + '.' + ext
                     
-                    # Save image
+                    # Save image only if it doesn't exist
                     img_file = self.assets_dir / filename
-                    img_file.write_bytes(data)
+                    if not img_file.exists():
+                        img_file.write_bytes(data)
                     
                     # Return relative path
                     return f"![{match.group(1)}](/notebooks/{self.notebook_name}/{filename})"
@@ -162,8 +163,9 @@ class ResourceProcessor(Preprocessor):
                         
                         # Save image
                         img_file = self.assets_dir / filename
-                        print(f"saving to {img_file}")
-                        img_file.write_bytes(img_data)
+                        if not img_file.exists():
+                            print(f"saving to {img_file}")
+                            img_file.write_bytes(img_data)
                         
                         # Update reference
                         new_data[mime_type] = f"/img/notebooks/{self.notebook_name}/{filename}"
