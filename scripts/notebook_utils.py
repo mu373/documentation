@@ -1,14 +1,6 @@
-#!/usr/bin/env python3
-import os
-import re
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
-import hashlib
-import base64
-import shutil
-
+from typing import Tuple
 import nbformat
-import yaml
 
 def escape_html(text):
     """

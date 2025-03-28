@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-import os
 import re
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -8,7 +6,6 @@ import shutil
 import nbformat
 from nbconvert.exporters import MarkdownExporter
 from nbconvert.preprocessors import Preprocessor
-import yaml
 
 # Import utility functions
 from notebook_utils import (
