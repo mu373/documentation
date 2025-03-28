@@ -317,7 +317,7 @@ def convert_notebook(notebook_path: Path, notebook_dir: Path, root_dir: Path) ->
     
     # Setup static directory for resources
     notebook_name = notebook_path.stem
-    static_dir = root_dir / "_intermediate" / "static"
+    static_dir = root_dir / "_intermediate" / "static" / "img"
     static_dir.mkdir(parents=True, exist_ok=True)
     
     # Check if this is a single-pager notebook (no pagebreaks)
