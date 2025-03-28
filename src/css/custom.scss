@@ -51,6 +51,7 @@ html {
 .container {
   --ifm-spacing-horizontal: 2.5rem;
 }
+
 .markdown {
   --ifm-leading: 0.8em;
   --ifm-heading-vertical-rhythm-bottom: 0.6;
@@ -98,4 +99,21 @@ hr {
 
 .footer--dark {
   --ifm-footer-background-color: #0f0f0f  !important;
+}
+
+@media (max-width: 997px) {
+  .container {
+    --ifm-spacing-horizontal: 1rem;
+  }
+  .markdown {
+    h1 {
+      --ifm-h1-font-size: 1.6rem !important;
+    }
+    h2 {
+      --ifm-h2-font-size: 1.25rem !important;
+    }
+    h3 {
+      --ifm-h3-font-size: 1.05rem !important;
+    }
+  }
 }
