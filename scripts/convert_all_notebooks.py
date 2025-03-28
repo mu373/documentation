@@ -22,9 +22,11 @@ def convert_all_notebooks(root_dir: Path) -> Dict:
     """Convert all notebooks in the directory to markdown files."""
     notebooks = find_notebooks(root_dir)
     
+    start_time = time.time()
     if not notebooks:
         print(f"No notebooks found in {root_dir}")
-        return {"total": 0, "success": 0, "failed": 0, "files_created": 0}
+        elapsed_time = time.time() - start_time
+        return {"total": 0, "success": 0, "failed": 0, "files_created": 0, "elapsed_time": elapsed_time }
     
     print(f"Found {len(notebooks)} notebooks to convert")
     
@@ -35,7 +37,6 @@ def convert_all_notebooks(root_dir: Path) -> Dict:
         "files_created": 0
     }
     
-    start_time = time.time()
     
     for i, notebook_path in enumerate(notebooks, 1):
         print(f"\n[{i}/{len(notebooks)}] Converting {notebook_path.relative_to(root_dir)}...")
