@@ -77,6 +77,9 @@ slug: intro
 ---
 ```
 
+## License
+This project uses multiple licenses (MIT and CC-BY) depending on the part of the repository. See [LICENSE.md](https://github.com/mu373/documentation/blob/main/LICENSE.md) for details.
+
 ## References
 - [Docs only mode](https://docusaurus.io/docs/docs-introduction#docs-only-mode)
 - [Using /docs directory for baseUrl](https://github.com/facebook/docusaurus/issues/6294)
