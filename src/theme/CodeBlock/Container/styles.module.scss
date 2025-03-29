@@ -16,6 +16,9 @@
     code {
       font-size: 0.95em;
       line-height: 1.3em;
+      @media (max-width: 997px) {
+        font-size: 0.9em;
+      }
     }
 
   }
