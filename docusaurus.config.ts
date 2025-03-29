@@ -43,7 +43,7 @@ const config: Config = {
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],
           editUrl: 'https://github.com/mu373/documentation/blob/main/',
-          showLastUpdateTime: true,
+          // showLastUpdateTime: true,
         },
         // blog: {
         //   showReadingTime: true,
