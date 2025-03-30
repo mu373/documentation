@@ -18,9 +18,9 @@ def escape_html(text):
              by their corresponding HTML entities.
     """
     # The ampersand must be replaced first to avoid double-escaping.
-    text = text.replace("&", "&amp;")
-    text = text.replace("<", "&lt;")
-    text = text.replace(">", "&gt;")
+    # text = text.replace("&", "&amp;")
+    # text = text.replace("<", "&lt;")
+    # text = text.replace(">", "&gt;")
     # text = text.replace('"', "&quot;")
     # text = text.replace("'", "&#39;")
     return text
