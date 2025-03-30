@@ -1,6 +1,7 @@
 ---
 sidebar_position: 1
 slug: license
+custom_edit_url: null
 ---
 
 # License
