@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
-title: Technology
-slug: technology
+title: Architecture
+slug: architecture
 custom_edit_url: null
 ---
 

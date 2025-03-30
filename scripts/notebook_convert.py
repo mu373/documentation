@@ -185,7 +185,7 @@ class ResourceProcessor(Preprocessor):
         
         # Find and process all image references
         return re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", replace_image, source)
-    
+
     def _process_output_media(self, outputs: List[Dict]) -> List[Dict]:
         """Process and save images and videos in cell outputs.
 
@@ -203,8 +203,37 @@ class ResourceProcessor(Preprocessor):
             if "data" in output:
                 new_data = {}
                 for mime_type, data in output["data"].items():
-                    # For images or direct video data
-                    if mime_type.startswith("image/") or mime_type.startswith("video/"):
+                    # For SVG images, handle differently since they are plain text
+                    if mime_type == "image/svg+xml":
+                        ext = "svg"
+                        # If data is a string, encode it to bytes; otherwise, assume it's already bytes
+                        if isinstance(data, str):
+                            media_data = data.encode("utf-8")
+                        else:
+                            media_data = data
+
+                        # Generate a filename from the content hash
+                        filename = hashlib.md5(media_data).hexdigest()[:12] + '.' + ext
+
+                        # Use the same asset directory for all media
+                        asset_dir = self.assets_dir
+                        url_prefix = "/img/notebooks"
+
+                        # Create the asset directory if it does not exist
+                        asset_dir.mkdir(parents=True, exist_ok=True)
+
+                        # Save the media file if not already present
+                        media_file = asset_dir / filename
+                        if not media_file.exists():
+                            print(f"saving to {media_file}")
+                            media_file.write_bytes(media_data)
+
+                        # Create new URL and update the reference for SVG
+                        new_url = f"{url_prefix}/{self.notebook_name}/{filename}"
+                        new_data[mime_type] = new_url
+
+                    # For images or direct video data (excluding SVG which is handled above)
+                    elif mime_type.startswith("image/") or mime_type.startswith("video/"):
                         # Determine the file extension from the MIME type
                         ext = mime_type.split('/')[-1]
                         # Decode base64 data from a data URL or a raw base64 string
@@ -237,6 +266,7 @@ class ResourceProcessor(Preprocessor):
 
                         # Update the reference with the new URL
                         new_data[mime_type] = f"{url_prefix}/{self.notebook_name}/{filename}"
+
                     # For video sources embedded in HTML output
                     elif mime_type == "text/html":
                         # Retrieve the HTML content as a string
@@ -282,6 +312,7 @@ class ResourceProcessor(Preprocessor):
                 output["data"] = new_data
             new_outputs.append(output)
         return new_outputs
+
 
 def setup_exporter(static_dir: Path, notebook_name: str) -> MarkdownExporter:
     """Create and configure a markdown exporter with the necessary preprocessors."""
