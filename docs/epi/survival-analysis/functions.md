@@ -21,18 +21,21 @@ $f(t)$ represents the **probability density of an event (e.g., death) occurring 
 
 ### Distribution Function
 The distribution function $F(t)$ represents the **probability that an event occurs before time $t$**. If we consider death as the event, the distribution function represents the probability of dying before time $t$.
+
 $$
 F(t) = P(T < t)
 $$
 
 ### Survival Function
 The survival function $S(t)$ is, in contrast to the distribution function, **the probability that an event does not occur by time $t$**. If we consider death as the event, the survival function represents the probability of surviving until time $t$.
+
 $$
 S(t) = P(T \geq t) = 1 - F(t)
 $$
 
 ### Hazard Function
 The hazard function $\lambda(t)$ can be thought of as a **conditional probability that an event occurs in a small interval between time $t$ and $t+h$, given survival up to time $t$**.
+
 $$
 \lambda(t) = \lim_{h \rightarrow 0} \frac{P(t \leq T < t + h \ | \ T \geq t)}{h}
 \tag{1}
@@ -43,12 +46,13 @@ When death is the event, the hazard function represents the probability (death r
 The reason why this is a conditional probability becomes clear when considering mortality at a specific age (e.g., age 40). For the event "death at age 40" to occur, the condition "being alive until age 40" must obviously be met.
 
 The hazard function $\lambda(t)$ can be transformed using the definition of conditional probability:
+
 $$
-P(A|B) = \frac{P(A \cap B)}{P(B)}
-\tag{a}
+P(A|B) = \frac{P(A \cap B)}{P(B)} \tag{a}
 $$
 
 Following this definition (a), the hazard function can be expressed using the probability density function $f(t)$ and the survival function $S(t)$ at time $t$ as follows:
+
 $$
 \begin{align*}
    \lambda(t)
@@ -61,6 +65,7 @@ $$
 $$
 
 The hazard function $\lambda(t)$ can also be written in terms of $S(t)$. Since $f(t)$ can be transformed as:
+
 $$
 \begin{align*}
    f(t)
@@ -71,18 +76,20 @@ $$
 $$
 
 We get:
+
 $$
-\begin{align*}
+\begin{align}
    \lambda(t)
        &= \frac{f(t)}{S(t)} \\
        &= -\frac{dS(t)}{dt} \frac{1}{S(t)} \\
        &= -\frac{S'(t)}{S(t)} \\
        &= -\frac{d}{dt} \log {S(t)}
    \tag{3}
-\end{align*}
+\end{align}
 $$
 
 By integrating equation (3) from time 0 to $t$, we can write it the other way around, expressing the survival function $S(t)$ in terms of the hazard function $\lambda(t)$.
+
 $$
 \begin{align*}
 \int_0^t \bigg( -\frac{d}{du} \log {S(u)} \bigg) du &= \int_0^t \lambda(u) du \\
@@ -92,6 +99,7 @@ $$
 $$
 
 Since the survival probability at time $t=0$ is 1, i.e., $S(0)=1$:
+
 $$
 \begin{align*}
 -\log S(t) + \log 1 &= \int_0^t \lambda(u) du \\
@@ -100,15 +108,14 @@ $$
 $$
 
 Taking the exponential of both sides, we get:
+
 $$
-\begin{align*}
-S(t)
-   & = \exp \bigg( - \int_0^t \lambda(u) du \bigg) \tag{4}
-\end{align*}
+S(t) = \exp \bigg( - \int_0^t \lambda(u) du \bigg) \tag{4}
 $$
 
 ### Cumulative Hazard Function
 The cumulative hazard function $\Lambda(t)$ at time $t$ is the definite integral of the hazard function $\lambda(t)$ from time 0 to $t$, yielding the following relationship:
+
 $$
 \begin{align*}
 \Lambda(t)
@@ -118,11 +125,9 @@ $$
 $$
 
 Taking the exponential of both sides, the survival function $S(t)$ can also be expressed as follows, which is also derived from equation (4) of the hazard function:
+
 $$
-\begin{align*}
-S(t)
-   &= \exp \big( - \Lambda(t) \big)
-\end{align*}
+S(t) = \exp \big( - \Lambda(t) \big)
 $$
 
 <!-- 
