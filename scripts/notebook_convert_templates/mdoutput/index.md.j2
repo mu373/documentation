@@ -60,3 +60,9 @@
 ![]({{ output.data['image/png'] }})
 </CodeOutputImageBlock>
 {%- endblock data_png -%}
+
+{%- block data_svg scoped -%}
+<CodeOutputImageBlock class="svg">
+![]({{ output.data['image/svg+xml'] }})
+</CodeOutputImageBlock>
+{%- endblock data_svg -%}

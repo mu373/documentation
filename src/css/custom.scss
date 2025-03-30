@@ -101,6 +101,9 @@ code {
   img {
     zoom: 50%;
   }
+  img.svg {
+    zoom: initial;
+  }
   margin-bottom: var(--ifm-leading);
 }
 
