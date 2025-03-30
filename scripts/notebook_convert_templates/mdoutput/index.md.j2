@@ -3,6 +3,7 @@
 
 
 {% block input %}
+{%- if cell.source  -%}
 ```
 {%- if 'magics_language' in cell.metadata  -%}
     {{ cell.metadata.magics_language}} 
@@ -15,6 +16,7 @@
 {%- endif %}
 {{ cell.source}}
 ```
+{%- endif %}
 {% endblock input %}
 
 {%- block traceback_line -%}

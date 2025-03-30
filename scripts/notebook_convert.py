@@ -16,26 +16,53 @@ from notebook_utils import (
 
 class HideCellProcessor(Preprocessor):
     """
-    This preprocessor removes cells based on cell type and metadata:
-    - Code cells with metadata 'hide_input: true' are removed.
-    - Markdown cells with metadata 'hide: true' are removed.
+    This preprocessor modifies code cells based on the metadata values 'hide_input' and 'hide':
+    
+    For code cells:
+      - If both 'hide_input' and 'hide' are True, delete the entire cell.
+      - If 'hide_input' is True and 'hide' is False, remove the input (source) while keeping outputs.
+      - If 'hide_input' is False and 'hide' is True, remove the outputs while keeping the input.
+      - If both are False, leave the cell unchanged.
+    
+    For markdown cells:
+      - If 'hide' is True, delete the entire cell.
+      - Otherwise, leave the cell unchanged.
     """
     def preprocess(self, nb, resources):
         """
-        Process the notebook by filtering out cells based on the specified conditions.
+        Process the notebook by modifying code and markdown cells according to the specified conditions.
         """
         filtered_cells = []
         for cell in nb.cells:
-            # Skip code cells that have 'hide_input' set to True in metadata.
             if cell.cell_type == 'code':
-                if cell.get('metadata', {}).get('hide_input', False) is True or cell.get('metadata', {}).get('hide', False) is True:
+                # Get metadata values for hide_input and hide (default to False)
+                hide_input = cell.get('metadata', {}).get('hide_input', False)
+                hide = cell.get('metadata', {}).get('hide', False)
+                
+                # Both hide_input and hide are True: remove the entire cell.
+                if hide_input and hide:
                     continue
-
-            # Skip markdown cells that have 'hide' set to True in metadata.
-            if cell.cell_type == 'markdown' and cell.get('metadata', {}).get('hide', False) is True:
-                continue
-
-            filtered_cells.append(cell)
+                
+                # hide_input is True and hide is False: remove the input (source), keep outputs.
+                elif hide_input and not hide:
+                    cell.source = ""
+                
+                # hide_input is False and hide is True: remove outputs, keep input.
+                elif not hide_input and hide:
+                    cell.outputs = []
+                
+                # Otherwise, do nothing.
+                filtered_cells.append(cell)
+            
+            elif cell.cell_type == 'markdown':
+                # For markdown cells, if 'hide' is True, remove the cell.
+                if cell.get('metadata', {}).get('hide', False):
+                    continue
+                filtered_cells.append(cell)
+            
+            else:
+                filtered_cells.append(cell)
+        
         nb.cells = filtered_cells
         return nb, resources
 
