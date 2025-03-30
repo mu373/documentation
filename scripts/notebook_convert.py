@@ -91,7 +91,7 @@ class ResourceProcessor(Preprocessor):
             cell.source = self._process_markdown_images(cell.source)
         elif cell.cell_type == "code" and "outputs" in cell:
             # Handle output images
-            cell["outputs"] = self._process_output_images(cell["outputs"])
+            cell["outputs"] = self._process_output_media(cell["outputs"])
             
         return cell, resources
     
@@ -134,6 +134,103 @@ class ResourceProcessor(Preprocessor):
         # Find and process all image references
         return re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", replace_image, source)
     
+    def _process_output_media(self, outputs: List[Dict]) -> List[Dict]:
+        """Process and save images and videos in cell outputs.
+
+        This function processes image and video data from cell outputs and saves them 
+        in the same asset directory. For videos, not only direct MIME types ("video/...") 
+        are handled but also those embedded within HTML (MIME type "text/html") containing 
+        <source src="data:video/...">.
+        """
+        import re
+        import base64
+        import hashlib
+
+        new_outputs = []
+        for output in outputs:
+            if "data" in output:
+                new_data = {}
+                for mime_type, data in output["data"].items():
+                    # For images or direct video data
+                    if mime_type.startswith("image/") or mime_type.startswith("video/"):
+                        # Determine the file extension from the MIME type
+                        ext = mime_type.split('/')[-1]
+                        # Decode base64 data from a data URL or a raw base64 string
+                        if isinstance(data, str):
+                            if data.startswith("data:"):
+                                # Handle data URLs
+                                b64_data = data.split(",", 1)[1]
+                                media_data = base64.b64decode(b64_data)
+                            else:
+                                # Handle raw base64 strings
+                                media_data = base64.b64decode(data)
+                        else:
+                            media_data = data
+
+                        # Generate a filename from the content hash
+                        filename = hashlib.md5(media_data).hexdigest()[:12] + '.' + ext
+
+                        # Use the same asset directory for both images and videos
+                        asset_dir = self.assets_dir
+                        url_prefix = "/img/notebooks"
+
+                        # Create the asset directory if it does not exist
+                        asset_dir.mkdir(parents=True, exist_ok=True)
+
+                        # Save the media file if not already present
+                        media_file = asset_dir / filename
+                        if not media_file.exists():
+                            print(f"saving to {media_file}")
+                            media_file.write_bytes(media_data)
+
+                        # Update the reference with the new URL
+                        new_data[mime_type] = f"{url_prefix}/{self.notebook_name}/{filename}"
+                    # For video sources embedded in HTML output
+                    elif mime_type == "text/html":
+                        # Retrieve the HTML content as a string
+                        html_content = data if isinstance(data, str) else ""
+                        # Use a regex to detect <source> tags with a video data URL
+                        pattern = r'<source\s+([^>]*?)src=["\'](data:video/[^"\']+)["\']'
+
+                        def replace_source(match):
+                            pre_attrs = match.group(1)
+                            data_url = match.group(2)
+                            # Verify that the data URL is in the correct format (e.g., data:video/mp4;base64,...)
+                            try:
+                                header, b64_str = data_url.split(",", 1)
+                            except Exception:
+                                return match.group(0)
+                            # Example header: "data:video/mp4;base64"
+                            mime = header.split(";")[0].split(":")[1]
+                            ext = mime.split("/")[-1]
+                            try:
+                                video_data = base64.b64decode(b64_str)
+                            except Exception:
+                                return match.group(0)
+
+                            # Generate a filename from the content hash
+                            filename = hashlib.md5(video_data).hexdigest()[:12] + '.' + ext
+
+                            # Save the file in the same img directory
+                            asset_dir = self.assets_dir
+                            url_prefix = "/docs/img/notebooks"
+                            asset_dir.mkdir(parents=True, exist_ok=True)
+                            video_file = asset_dir / filename
+                            if not video_file.exists():
+                                print(f"saving to {video_file}")
+                                video_file.write_bytes(video_data)
+                            new_url = f"{url_prefix}/{self.notebook_name}/{filename}"
+                            # Update the src attribute in the <source> tag and return the new tag
+                            return f'<source {pre_attrs}src="{new_url}"'
+
+                        new_html = re.sub(pattern, replace_source, html_content)
+                        new_data[mime_type] = new_html
+                    else:
+                        new_data[mime_type] = data
+                output["data"] = new_data
+            new_outputs.append(output)
+        return new_outputs
+
     def _process_output_images(self, outputs: List[Dict]) -> List[Dict]:
         """Process and save images in cell outputs."""
         new_outputs = []
