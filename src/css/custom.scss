@@ -72,10 +72,21 @@ html {
   }
   p {
   }
+  video {
+    max-width: 100%;
+  }
 }
 
 hr {
   margin: 2em 0;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+code {
+  font-size: 0.8em;
 }
 
 .theme-code-block :has(+ .jupyter-output_src-components-CodeOutputBlock-CodeOutputBlock-module) {

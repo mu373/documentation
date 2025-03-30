@@ -2,6 +2,7 @@
 sidebar_position: 2
 title: Technology
 slug: technology
+custom_edit_url: null
 ---
 
 ## Overview
