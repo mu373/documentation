@@ -8,4 +8,4 @@ custom_edit_url: null
 
 # Foundations
 
-
+This section includes notes on the foundational elements of Network Science.
