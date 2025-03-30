@@ -95,6 +95,9 @@ class EscapePreprocessor(Preprocessor):
             # Escape triple backticks in code cells.
             cell.source = cell.source.replace("```", r"\`\`\`")
 
+            # Replace tabs with 4 spaces
+            cell.source = cell.source.replace("\t", r"    ")
+
             if "outputs" in cell:
                 filter_out = set()
                 for i, output in enumerate(cell["outputs"]):
