@@ -14,6 +14,32 @@ from notebook_utils import (
 )
 
 
+class HideCellProcessor(Preprocessor):
+    """
+    This preprocessor removes cells based on cell type and metadata:
+    - Code cells with metadata 'hide_input: true' are removed.
+    - Markdown cells with metadata 'hide: true' are removed.
+    """
+    def preprocess(self, nb, resources):
+        """
+        Process the notebook by filtering out cells based on the specified conditions.
+        """
+        filtered_cells = []
+        for cell in nb.cells:
+            # Skip code cells that have 'hide_input' set to True in metadata.
+            if cell.cell_type == 'code':
+                if cell.get('metadata', {}).get('hide_input', False) is True or cell.get('metadata', {}).get('hide', False) is True:
+                    continue
+
+            # Skip markdown cells that have 'hide' set to True in metadata.
+            if cell.cell_type == 'markdown' and cell.get('metadata', {}).get('hide', False) is True:
+                continue
+
+            filtered_cells.append(cell)
+        nb.cells = filtered_cells
+        return nb, resources
+
+
 class EscapePreprocessor(Preprocessor):
     def escape_html(self, text):
         """
@@ -24,23 +50,19 @@ class EscapePreprocessor(Preprocessor):
     def preprocess_cell(self, cell, resources, cell_index):
         if cell.cell_type == "markdown":
 
-            # Don't include cells with {"hide": true} in metadata
-            if "hide" in cell.get("metadata", {}) and cell.metadata.hide == True:
-                cell.source = ""
-            else:
-                # Rewrite .ipynb links to .md links.
-                cell.source = re.sub(
-                    r"\[([^\]]*)\]\((?![^\)]*//)([^)]*)\.ipynb\)",
-                    r"[\1](\2.md)",
-                    cell.source,
-                )
+            # Rewrite .ipynb links to .md links.
+            cell.source = re.sub(
+                r"\[([^\]]*)\]\((?![^\)]*//)([^)]*)\.ipynb\)",
+                r"[\1](\2.md)",
+                cell.source,
+            )
 
-                # Heading levels
-                cell.source = re.sub(
-                    r"(^#)(#.*) (.*)",
-                    r"\2 \3",
-                    cell.source,
-                )
+            # Heading levels
+            cell.source = re.sub(
+                r"(^#)(#.*) (.*)",
+                r"\2 \3",
+                cell.source,
+            )
 
         elif cell.cell_type == "code":
             # Escape triple backticks in code cells.
@@ -235,6 +257,7 @@ def setup_exporter(static_dir: Path, notebook_name: str) -> MarkdownExporter:
     """Create and configure a markdown exporter with the necessary preprocessors."""
     return MarkdownExporter(
         preprocessors=[
+            HideCellProcessor,
             EscapePreprocessor,
             ResourceProcessor(static_dir, notebook_name)
         ],
