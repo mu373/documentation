@@ -90,7 +90,7 @@ class ResourceProcessor(Preprocessor):
             # Handle embedded images
             cell.source = self._process_markdown_images(cell.source)
         elif cell.cell_type == "code" and "outputs" in cell:
-            # Handle output images
+            # Handle output media
             cell["outputs"] = self._process_output_media(cell["outputs"])
             
         return cell, resources
@@ -230,48 +230,6 @@ class ResourceProcessor(Preprocessor):
                 output["data"] = new_data
             new_outputs.append(output)
         return new_outputs
-
-    def _process_output_images(self, outputs: List[Dict]) -> List[Dict]:
-        """Process and save images in cell outputs."""
-        new_outputs = []
-        for output in outputs:
-            if "data" in output:
-                new_data = {}
-                for mime_type, data in output["data"].items():
-                    if mime_type.startswith("image/"):
-                        # Save image data
-                        import base64
-                        import hashlib
-                        
-                        ext = mime_type.split('/')[-1]
-                        if isinstance(data, str):
-                            if data.startswith("data:"):
-                                # Handle data URLs
-                                b64_data = data.split(",", 1)[1]
-                                img_data = base64.b64decode(b64_data)
-                            else:
-                                # Handle base64 directly
-                                img_data = base64.b64decode(data)
-                        else:
-                            img_data = data
-                            
-                        # Generate filename from content hash
-                        filename = hashlib.md5(img_data).hexdigest()[:12] + '.' + ext
-                        
-                        # Save image
-                        img_file = self.assets_dir / filename
-                        if not img_file.exists():
-                            print(f"saving to {img_file}")
-                            img_file.write_bytes(img_data)
-                        
-                        # Update reference
-                        new_data[mime_type] = f"/img/notebooks/{self.notebook_name}/{filename}"
-                    else:
-                        new_data[mime_type] = data
-                output["data"] = new_data
-            new_outputs.append(output)
-        return new_outputs
-
 
 def setup_exporter(static_dir: Path, notebook_name: str) -> MarkdownExporter:
     """Create and configure a markdown exporter with the necessary preprocessors."""
