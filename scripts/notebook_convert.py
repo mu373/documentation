@@ -609,7 +609,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description="Convert Jupyter notebooks to multiple markdown files")
     parser.add_argument("notebook", type=Path, help="Input notebook path")
-    parser.add_argument("root_dir", type=Path, help="Root directory of the project")
+    parser.add_argument("root_dir", type=Path, nargs="?", default=".", help="Root directory of the project")
     
     args = parser.parse_args()
     
