@@ -1,4 +1,4 @@
-name: Validate build with updated yarn.lock
+name: Validate yarn.lock
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'Pull Request number to run the build on'
+        description: 'Pull Request number to test building'
         required: true
         default: ''
 
@@ -23,7 +23,7 @@ jobs:
         with:
           ref: refs/pull/${{ github.event.inputs.pr_number }}/head
 
-      - name: Checkout Repository (PR or Comment Trigger)
+      - name: Checkout Repository (PR Trigger)
         if: ${{ github.event_name != 'workflow_dispatch' }}
         uses: actions/checkout@v4
 
