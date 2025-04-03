@@ -53,8 +53,7 @@ def test_single_page_conversion(setup_test_environment):
     if not notebook_path.exists():
         pytest.skip(f"Notebook file {notebook_path} not found")
     
-    # Call convert_notebook directly, similar to running the script from command line
-    # This is like running: python3 scripts/notebook_convert.py tests/notebooks/single-page.ipynb
+    # Convert notebook
     output_paths = convert_notebook(notebook_path, notebook_path.parent, env['test_dir'].parent)
     
     # Check that a single output file was created
@@ -97,8 +96,7 @@ def test_multi_page_conversion(setup_test_environment):
     if not notebook_path.exists():
         pytest.skip(f"Notebook file {notebook_path} not found")
     
-    # Call convert_notebook directly, similar to running the script from command line
-    # This is like running: python3 scripts/notebook_convert.py tests/notebooks/multi-page.ipynb
+    # Convert notebook
     output_paths = convert_notebook(notebook_path, notebook_path.parent, env['test_dir'].parent)
     
     # Check that multiple output files were created
