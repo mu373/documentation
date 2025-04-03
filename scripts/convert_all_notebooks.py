@@ -9,10 +9,23 @@ from typing import List, Dict
 # Import the convert_notebook function from the notebook_split_convert module
 from notebook_convert import convert_notebook
 
+# Define folders to exclude from notebook search
+EXCLUDED_FOLDERS = ["/tests/"]
+
+def should_exclude(path: str) -> bool:
+    """Check if a path should be excluded based on the exclusion patterns."""
+    for excluded in EXCLUDED_FOLDERS:
+        if excluded in path:
+            return True
+    return False
+
 def find_notebooks(directory: Path) -> List[Path]:
     """Find all Jupyter notebook files recursively in a directory."""
     notebooks = []
     for root, _, files in os.walk(directory):
+        # Skip directories matching exclusion patterns
+        if should_exclude(str(root)):
+            continue
         for file in files:
             if file.endswith('.ipynb') and not file.startswith('.'):
                 notebooks.append(Path(root) / file)
