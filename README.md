@@ -77,6 +77,13 @@ slug: intro
 ---
 ```
 
+## Testing
+
+Run tests on notebook conversion. This test is automated on [GitHub Actions](https://github.com/mu373/documentation/actions/workflows/test-notebook-convert.yml).
+```sh
+pytest tests/test-notebook-convert.py -v
+```
+
 ## License
 This project uses multiple licenses (MIT and CC-BY) depending on the part of the repository. See [LICENSE.md](https://github.com/mu373/documentation/blob/main/LICENSE.md) for details.
 
