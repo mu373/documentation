@@ -53,25 +53,24 @@ def test_single_page_conversion(setup_test_environment):
     if not notebook_path.exists():
         pytest.skip(f"Notebook file {notebook_path} not found")
     
-    # Call convert_notebook directly, similar to running the script from command line
-    # This is like running: python3 scripts/notebook_convert.py tests/notebooks/single-page.ipynb
+    # Convert notebook
     output_paths = convert_notebook(notebook_path, notebook_path.parent, env['test_dir'].parent)
     
     # Check that a single output file was created
-    assert len(output_paths) == 1
+    assert len(output_paths) == 1, "Expected a single output file for single-page conversion"
     
     # Check the output file has the correct name
     expected_path = notebook_path.parent / f"{notebook_path.stem}.mdx"
-    assert output_paths[0] == expected_path
+    assert output_paths[0] == expected_path, "Output path does not match expected path (filename.mdx) for single-page conversion"
     
     # Check the file exists
-    assert expected_path.exists()
+    assert expected_path.exists(), "Expected output file (filename.mdx) was not created"
     
     # Check the file content
     with open(expected_path) as f:
         content = f.read()
         # Verify frontmatter is present
-        assert "title: Single Page Test" in content
+        assert "title: Single Page Test" in content, "Title in frontmatter is incorrect"
         # Verify content is present
         assert "# Test heading" in content
     
@@ -97,30 +96,29 @@ def test_multi_page_conversion(setup_test_environment):
     if not notebook_path.exists():
         pytest.skip(f"Notebook file {notebook_path} not found")
     
-    # Call convert_notebook directly, similar to running the script from command line
-    # This is like running: python3 scripts/notebook_convert.py tests/notebooks/multi-page.ipynb
+    # Convert notebook
     output_paths = convert_notebook(notebook_path, notebook_path.parent, env['test_dir'].parent)
     
     # Check that multiple output files were created
-    assert len(output_paths) > 1
+    assert len(output_paths) > 1, "Expected multiple output files for multi-page conversion"
     
     # Check that a subdirectory was created
     notebook_dir = notebook_path.parent / notebook_path.stem
-    assert notebook_dir.exists()
+    assert notebook_dir.exists(), "Subdirectory for multi-page conversion was not created"
     
     # Check index.mdx
     index_path = notebook_dir / "index.mdx"
-    assert index_path.exists()
+    assert index_path.exists(), "index.mdx file was not created in the expected directory"
     with open(index_path) as f:
         content = f.read()
         # Verify chapter title is present in frontmatter
-        assert "title: Multi page chapter title" in content
+        assert "title: Multi page chapter title" in content, "Title in index.mdx is incorrect"
         # Verify index content
-        assert "# Chapter Heading" in content
+        assert "# Chapter Heading" in content, "Content of index.mdx is incorrect"
     
     # Check for page files
     page_files = list(notebook_dir.glob("autogen-page-*.mdx"))
-    assert len(page_files) >= 2
+    assert len(page_files) >= 2, "Expected at least two files to be generated."
     
     # Sort the files to ensure we check them in the right order
     page_files.sort()
@@ -128,12 +126,12 @@ def test_multi_page_conversion(setup_test_environment):
     # Check content of first page
     with open(page_files[0]) as f:
         content = f.read()
-        assert "title: Section 1" in content
+        assert "title: Section 1" in content, "Title in first page is incorrect"
     
     # Check content of second page
     with open(page_files[1]) as f:
         content = f.read()
-        assert "title: Section 2" in content
+        assert "title: Section 2" in content, "Title in second page is incorrect"
     
     # Check for extracted images
     static_dir = env['test_dir'].parent / "_intermediate" / "static" / "img"
@@ -156,5 +154,5 @@ def test_frontmatter_extraction():
     
     extracted, idx = extract_frontmatter(notebook)
     assert idx == 0  # Should find frontmatter in first cell
-    assert "title: Test Frontmatter" in extracted, "Title incorrect"
-    assert "slug: /test" in extracted, "Content incorrect"
+    assert "title: Test Frontmatter" in extracted, "Title in the frontmatter is incorrect"
+    assert "slug: /test" in extracted, "Slug in the frontmatter is incorrect"
