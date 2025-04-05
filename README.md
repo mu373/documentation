@@ -8,7 +8,7 @@ Available at https://minamiueda.com/docs/. This website is built using [Docusaur
 
 This project uses [`bun`](https://bun.sh/docs/installation) as the runtime.
 
-```
+```sh
 # Install bun first: https://bun.sh/docs/installation
 $ bun install
 ```
@@ -32,7 +32,7 @@ bun run nb-build
 
 
 ### Local Development
-```
+```sh
 $ bun run start
 ```
 
@@ -40,7 +40,7 @@ This command starts a local development server and opens up a browser window. Mo
 
 ### Build
 
-```
+```sh
 $ bun run build
 ```
 
