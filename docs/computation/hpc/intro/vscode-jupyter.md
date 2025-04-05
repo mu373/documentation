@@ -1,12 +1,11 @@
 ---
+title: Jupyter on VS Code
 sidebar_position: 11
 slug: vscode-jupyter
 tags:
   - Jupyter
   - VSCode
 ---
-
-# Jupyter on VS Code
 
 ## Introduction {#intro}
 In the previous sections, we've learned how to start Jupyter Lab on Discovery computing node and how to connect those nodes from VS Code. If you haven't, you can follow the following tutorials:

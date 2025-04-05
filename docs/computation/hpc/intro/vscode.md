@@ -1,11 +1,11 @@
 ---
+title: Discovery with VS Code
 sidebar_position: 10
 slug: vscode
 tags:
   - Jupyter
 ---
 
-# Discovery with VS Code
 Want to edit files directly from VSCode? There is a way to do that.
 
 

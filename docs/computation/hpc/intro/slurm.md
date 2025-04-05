@@ -1,11 +1,10 @@
 ---
+title: Slurm
 sidebar_position: 8
 slug: slurm
 tags:
   - Slurm
 ---
-
-# Slurm
 
 ## What is Slurm?
 

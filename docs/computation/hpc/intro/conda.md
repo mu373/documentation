@@ -1,11 +1,10 @@
 ---
+title: Anaconda
 sidebar_position: 8
 slug: conda
 tags:
   - conda
 ---
-
-# Anaconda
 
 ## What is Anaconda? {#about}
 

@@ -1,11 +1,10 @@
 ---
+title: Public key
 sidebar_position: 4
 slug: public-key
 tags:
   - SSH
 ---
-
-# Public key
 
 ## What is private/public key?
 

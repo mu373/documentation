@@ -1,11 +1,10 @@
 ---
+title: Remote Access with SSH
 sidebar_position: 5
 slug: ssh
 tags:
   - SSH
 ---
-
-# Remote Access with SSH
 
 When you are working on your local machine, the shell starts up just by opening a new terminal window without asking for authentication. How can we access the shell on a remote server, just as we do on the local machine? This is where SSH (Secure Shell) comes in.
 

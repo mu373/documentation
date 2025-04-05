@@ -1,9 +1,8 @@
 ---
+title: Directory
 sidebar_position: 1
 slug: directory
 ---
-
-# Directory
 
 ## Home directory
 Home directory is where you primary store your files. Each user gets their own home directory at `/home/your_user_name/`.

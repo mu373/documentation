@@ -1,9 +1,9 @@
 ---
+title: Module
 sidebar_position: 6
 slug: module-intro
 ---
 
-# Module
 The ‘modules’ tool is widely used for managing application environments on High-Performance Computing (HPC) systems. This page will provide an overview of ‘modules’, instructions on using them, best practices, use cases, and more.
 
 The module system on the cluster includes many commonly used scientific software packages that you can load into your path when you need them and unload when you no longer need them. In essence, ‘modules’ handle environment variables like PATH and LD_LIBRARY_PATH to avoid conflicts between software applications.

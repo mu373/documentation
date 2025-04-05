@@ -1,9 +1,8 @@
 ---
+title: Custom module
 sidebar_position: 7
 slug: custom-module
 ---
-
-# Custom module
 
 Once you have installed a software for yourself, you can use the `module` tool to control the usage of the software. The advantage of not directly adding binary paths to `PATH` is that you have control to deciding when to load the software to the environment.
 

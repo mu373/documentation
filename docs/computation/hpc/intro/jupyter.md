@@ -1,11 +1,10 @@
 ---
+title: Jupyter Lab
 sidebar_position: 10
 slug: jupyter
 tags:
   - Jupyter
 ---
-
-# Jupyter Lab
 
 You can run your own Jupyter Lab for yourself, without depending on the OOD.
 
