@@ -27,14 +27,11 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' }}
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'yarn'
+      - name: Set up bun
+        uses: oven-sh/setup-bun@v2
       
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
       
       - name: Build Project
-        run: yarn build
+        run: bun run build
