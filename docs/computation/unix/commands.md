@@ -1,9 +1,8 @@
 ---
+title: Basic commands
 sidebar_position: 1
 slug: commands
 ---
-
-# Basic commands
 
 ### cd
 `cd`: Moving around in file system

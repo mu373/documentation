@@ -1,9 +1,8 @@
 ---
+title: User and Group
 sidebar_position: 3
 slug: user-and-group
 ---
-
-# User and Group
 
 ## User
 

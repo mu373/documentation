@@ -1,10 +1,8 @@
 ---
+title: Managing resources
 sidebar_position: 10
 slug: resource
 ---
-
-# Managing resources
-
 
 ## Computing resource
 

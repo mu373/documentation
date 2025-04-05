@@ -1,9 +1,8 @@
 ---
+title: Shell
 sidebar_position: 1
 slug: shell
 ---
-
-# Shell
 
 ## Various types of shell
 bash, zsh

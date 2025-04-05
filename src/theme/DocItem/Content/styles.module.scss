@@ -1,0 +1,23 @@
+.docItemContentHeader {
+    margin-bottom: calc(
+        var(--ifm-h1-vertical-rhythm-bottom) * 2em
+    );
+
+    h1 {
+        margin-bottom: 0 !important;
+    }
+}
+
+.metadata {
+    ul {
+        padding-top: calc( 0.7 * var(--ifm-leading) );
+        padding-left: 0;
+        margin-bottom: 0;
+        line-height: 1.3;
+        li {
+            font-size: 0.85em;
+            color: var(--ifm-color-emphasis-700);
+            list-style: none;
+        }
+    }
+}

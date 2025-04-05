@@ -1,9 +1,8 @@
 ---
+title: What is Discovery?
 sidebar_position: 1
 slug: discovery
 ---
-
-# What is Discovery?
 
 ## Overview
 [Discovery cluster](https://rc.northeastern.edu/) is a **high-performance computing (HPC) resource** for Northeastern University research community, which is physically located in [Massachusetts Green High Performance Computing Center](https://www.mghpcc.org/about-the-mghpcc/) (MGHPCC) in Holyoke, MA. MGHPCC is a joint venture of multiple universities around Boston&mdash;including Boston University, Harvard, MIT, Northeastern, the UMass system, and Yale&mdash;and provides an intercollegiate high-performance computing for these universities[^mghpcc].
