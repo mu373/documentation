@@ -11,7 +11,7 @@ This website is developed using [Docusaurus](https://docusaurus.io/), an open-so
 - Static-site generator: [Docusaurus](https://docusaurus.io/)
     - Built on [bun](https://bun.sh/)
 - Repository: [GitHub](https://github.com/mu373/documentation/)
-- CI: [GitHub Actions](https://github.com/mu373/documentation/actions/workflows/deploy.yml)
+- CI: [GitHub Actions](https://github.com/mu373/documentation/actions)
     - Runs the Jupyter notebook conversion and builds the entire website
     - Deploys to Vercel
 - Hosting: [Vercel](https://vercel.com/)
