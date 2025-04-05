@@ -9,14 +9,15 @@ custom_edit_url: null
 This website is developed using [Docusaurus](https://docusaurus.io/), an open-source static-site generator developed by [Meta](https://opensource.fb.com/projects/docusaurus/).
 
 - Static-site generator: [Docusaurus](https://docusaurus.io/)
+    - Built on [bun](https://bun.sh/)
 - Repository: [GitHub](https://github.com/mu373/documentation/)
 - CI: [GitHub Actions](https://github.com/mu373/documentation/actions/workflows/deploy.yml)
     - Runs the Jupyter notebook conversion and builds the entire website
-    - Automatically deploys to Vercel
+    - Deploys to Vercel
 - Hosting: [Vercel](https://vercel.com/)
-    - Deploys to a subdomain (e.g., `https://mysubdomain.minamiueda.com/docs/`)
+    - Deployment is made to a subdomain (e.g., `https://mysubdomain.minamiueda.com/docs/`)
 - Reverse Proxy: [Cloudflare Workers](https://developers.cloudflare.com/workers/)
-    - To serve contents under the subdirectory of the domain root (at `https://minamiueda.com/docs/`), Cloudflare Workers is used to rewrite the request to the actual origin hosted at the subdomain.
+    - To serve contents under the subdirectory of the domain root (at `https://minamiueda.com/docs/`), Cloudflare Workers is used to rewrite the request to the origin hosted at the subdomain.
     - It's just a matter of preference, but I wanted have them under subdirectory, not at subdomain, while maintaining other things managed as separate projects served from different servers.
 
 All of the codes and documentation conents are published on [GitHub](https://github.com/mu373/documentation/). 
