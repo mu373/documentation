@@ -1,9 +1,9 @@
-name: Validate yarn.lock
+name: Validate bun.lock
 
 on:
   pull_request:
     paths:
-      - 'yarn.lock'
+      - 'bun.lock'
 
   workflow_dispatch:
     inputs:
