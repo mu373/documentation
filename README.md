@@ -6,8 +6,11 @@ Available at https://minamiueda.com/docs/. This website is built using [Docusaur
 
 ### Installation
 
+This project uses [`bun`](https://bun.sh/docs/installation) as the runtime.
+
 ```
-$ yarn
+# Install bun first: https://bun.sh/docs/installation
+$ bun install
 ```
 
 ### Converting notebooks
@@ -18,19 +21,19 @@ pip install -r requirements.txt
 # Convert notebooks to markdown
 # Use following command if the specific Python interpreter (for example from conda) you want to use is not detected
 # python3 scripts/convert_all_notebooks.py .
-yarn nb-convert
+bun run nb-convert
 
 # Copy extracted images from notebook to static directory.
-yarn run nb-copy-image
+bun run nb-copy-image
 
 # Or run following. This runs nb-convert and nb-copy-image at once.
-yarn run nb-build
+bun run nb-build
 ```
 
 
 ### Local Development
 ```
-$ yarn start
+$ bun run start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
@@ -38,7 +41,7 @@ This command starts a local development server and opens up a browser window. Mo
 ### Build
 
 ```
-$ yarn build
+$ bun run build
 ```
 
 This command generates static content into the `build/docs` directory and can be served using any static contents hosting service. You can change the target directory in `package.json` by changing the build command `"docusaurus build --out-dir build/docs`.
