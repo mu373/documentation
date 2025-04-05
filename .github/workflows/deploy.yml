@@ -23,7 +23,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-      
+
+    - name: Set up cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.bun/install/cache
+        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+        
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -35,20 +42,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 22
-        cache: 'yarn'
+    - name: Set up bun
+      uses: oven-sh/setup-bun@v2
         
-    - name: Install Node.js dependencies
-      run: yarn install --frozen-lockfile
+    - name: Install dependencies
+      run: bun install --frozen-lockfile
 
     - name: Install Vercel CLI
-      run: yarn global add vercel
+      run: bun add --global vercel
 
     - name: Convert notebooks
-      run: yarn run nb-build
+      run: bun run nb-build
     
     - name: Pull Vercel Environment Information
       run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}

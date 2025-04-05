@@ -15,7 +15,7 @@
     "nb-convert": "python scripts/convert_all_notebooks.py .",
     "nb-convert-single": "python3 scripts/notebook_convert.py",
     "nb-copy-image": "bash scripts/copy_notebook_images.sh",
-    "nb-build": "yarn run nb-convert && yarn run nb-copy-image",
+    "nb-build": "bun run nb-convert && bun run nb-copy-image",
     "typecheck": "tsc"
   },
   "dependencies": {
