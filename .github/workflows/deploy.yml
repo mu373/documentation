@@ -44,12 +44,12 @@ jobs:
     - name: Install Node.js dependencies
       run: yarn install --frozen-lockfile
 
+    - name: Install Vercel CLI
+      run: yarn global add vercel
+
     - name: Convert notebooks
       run: yarn run nb-build
     
-    - name: Install Vercel CLI
-      run: npm install --global vercel@latest
-
     - name: Pull Vercel Environment Information
       run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
