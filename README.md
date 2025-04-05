@@ -14,13 +14,19 @@ $ bun install
 ```
 
 ### Converting notebooks
-```sh
-# Install requirements
-pip install -r requirements.txt
 
+For converting Jupyter notebooks into Markdown, we use Python from [`uv`](https://docs.astral.sh/uv/).
+
+```sh
+# Install uv first: https://docs.astral.sh/uv/getting-started/installation/
+
+# Install dependencies
+$ uv sync
+```
+
+```sh
 # Convert notebooks to markdown
-# Use following command if the specific Python interpreter (for example from conda) you want to use is not detected
-# python3 scripts/convert_all_notebooks.py .
+# uv run scripts/convert_all_notebooks.py .
 bun run nb-convert
 
 # Copy extracted images from notebook to static directory.
