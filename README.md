@@ -17,7 +17,7 @@ pip install -r requirements.txt
 
 # Convert notebooks to markdown
 # Use following command if the specific Python interpreter (for example from conda) you want to use is not detected
-# python3 python scripts/convert_all_notebooks.py .
+# python3 scripts/convert_all_notebooks.py .
 yarn nb-convert
 
 # Copy extracted images from notebook to static directory.
@@ -48,13 +48,18 @@ This command generates static content into the `build/docs` directory and can be
 ### Frontmatter
 ```yaml
 ---
-title: Lorem Ipsum
+title: 'Lorem Ipsum | Chapter 1' # Used in doc pages header and <title> tags
+custom_title: Lorem Ipsum # Optional: Overrides `title` if set in doc pages
+sidebar_label: Lorem # Optional: Label shown in sidebar and breadcrumbs
 hide_title: false # Optional: You can hide the title (h1).
 slug: lorem-ipsum # Custom URL
 tags:
   - notes
 sidebar_position: 1
 custom_edit_url: "" # Optional: Use this field to customize "edit" or "view source" link. Set empty value to hide.
+header: # Optional: Additional informations shown in the doc header. Accepts any key-value pair.
+  - Class: Introduction to Computer Science
+  - Year: 2025
 ---
 ```
 
