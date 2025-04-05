@@ -30,8 +30,7 @@ jobs:
     - name: Install Python dependencies
       run: |
         uv sync
-        uv add pytest matplotlib numpy
         
     - name: Run tests
       run: |
-        uvx pytest tests/test-notebook-convert.py -v
+        uv run pytest tests/test-notebook-convert.py -v
