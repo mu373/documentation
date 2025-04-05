@@ -1,9 +1,9 @@
 ---
-title: Survival Function
+title: Survival Function and Hazard Function | Survival Analysis
+custom_title: Survival Function and Hazard Function
+sidebar_label: Survival Function
 sidebar_position: 1
 ---
-
-# Survival Function and Hazard Function
 
 ## Introduction
 This section introduces the most foundational element of the survival analysis, which are the **survival function** and the **hazard function**.
