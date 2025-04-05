@@ -16,7 +16,8 @@
     "nb-convert-single": "uv run scripts/notebook_convert.py",
     "nb-copy-image": "bash scripts/copy_notebook_images.sh",
     "nb-build": "bun run nb-convert && bun run nb-copy-image",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "test:nb-convert": "uv run pytest tests/test-notebook-convert.py -v"
   },
   "dependencies": {
     "@docusaurus/core": "3.7.0",
