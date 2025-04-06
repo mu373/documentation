@@ -1,0 +1,122 @@
+---
+title: p5.js
+slug: p5js
+---
+
+import { P5Sketch } from '@site/src/components/P5Sketch/P5Sketch.tsx';
+
+This website supports the embedding of p5.js sketches.
+
+
+## Sine waves
+
+export const unitCircleSketch = (p, props) => {
+  let prevInitFrame = 1;
+  let radius = 100;
+  let plotData = [];
+  
+  return {
+    setup() {
+      // スクリーンリーダーアクセシビリティ対応
+      if (p.textOutput) {
+        p.textOutput();
+      }
+    },
+    
+    draw() {
+      p.clear();
+      p.background(224, 239, 243);
+      
+      // Calculate sine and cosine of current angle (frameCount)
+      let rad = p.radians(p.frameCount - 1) * 2;
+      let sine = p.sin(rad);
+      let cosine = p.cos(rad);
+      
+      // Get x and y coordinates from sine and cosine
+      let x = cosine * radius;
+      let y = -sine * radius;
+      
+      // Draw unit circle and related lines/points
+      p.push();
+      p.translate(radius + 20, props.height / 2);
+      p.fill(255); 
+      p.strokeWeight(1);
+      p.ellipse(0, 0, radius * 2, radius * 2); // Unit circle
+      p.line(-radius, 0, radius, 0); // Horizontal line through center of circle
+      p.line(radius + 20, y, -radius - 20, y); // Horizontal line at Y position of current angle
+      p.strokeWeight(3);
+      p.line(0, 0, x, y); // Line from center to point on circle
+      p.line(x, 0, x, y); // Vertical line from point on circle to x-axis
+      p.line(0, 0, x, 0); // Horizontal line from center to point on circle's x-coordinate
+      p.strokeWeight(1);
+      drawCircleMarker(p.createVector(x, y), 4); // Draw point on circle
+      p.pop();
+      
+      // Setup and update the sine wave graph data
+      let graphW = props.width - (radius + 20) * 2;
+      let graphX = (radius + 20) * 2;
+      if (p.frameCount > prevInitFrame + graphW) {
+        plotData = [];
+        prevInitFrame += graphW;
+      }
+      plotData.push({x: p.frameCount - prevInitFrame, y: -y});
+      
+      // Plot the sine wave graph
+      plotGraph(plotData, graphX, props.height / 2, graphW, props.height - 64, 0, graphW, -props.height / 2 + 32, props.height / 2 - 32, "time", "y");
+    }
+  };
+  
+  /** ヘルパー関数群 **/
+  function plotGraph(data, ox, oy, w, h, minX, maxX, minY, maxY, xLabel, yLabel) {
+    let left = ox - minX / (maxX - minX) * w;
+    let top = oy - maxY / (maxY - minY) * h;
+    let labelLeft = p.abs(left - ox) > p.abs(left + w - ox);
+    let labelTop = p.abs(top - oy) > p.abs(top + h - oy);
+    
+    p.push();
+    p.noFill(); 
+    p.stroke(0);
+    p.line(left, oy, left + w, oy); // X-axis
+    p.line(ox, top, ox, top + h);  // Y-axis
+    
+    // Plot the data
+    p.beginShape();
+    for (let i = 0; i < data.length; i++) {
+      let x = ox + data[i].x / (maxX - minX) * w;
+      let y = oy - data[i].y / (maxY - minY) * h;
+      p.vertex(x, y);
+    }
+    p.endShape();
+    
+    p.fill(0);
+    drawLabel(labelLeft ? left : left + w, oy + (labelTop ? 16 : -8), xLabel, labelLeft ? p.LEFT : p.RIGHT);
+    drawLabel(ox, labelTop ? top : top + h, yLabel, labelLeft ? p.RIGHT : p.LEFT);
+    p.pop();
+  }
+  
+  function drawLabel(x, y, label, align = p.CENTER) {
+    p.push();
+    p.strokeWeight(0);
+    p.textFont("monospace");
+    p.textSize(14);
+    p.textAlign(align);
+    let tx = x;
+    if (align === p.LEFT) {tx += 6;}
+    if (align === p.RIGHT) {tx -= 6;}
+    p.text(label, tx, y);
+    p.pop();
+  }
+  
+  function drawCircleMarker(p_vector, size) {
+    p.ellipse(p_vector.x, p_vector.y, size * 2, size * 2);
+  }
+};
+
+<P5Sketch
+  sketch={unitCircleSketch}
+/>
+
+<div style={{textAlign: 'center'}}>
+[Kenichi Yoneda](https://x.com/kyndinfo). [Sine waves and Additive Synthesis サイン波と加算合成](https://kyndinfo.notion.site/Sine-waves-and-Additive-Synthesis-80562e2ec05c4cc0b109691dea3201d7). [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).  
+<small>*p5.js sketch has been refactored into instance mode.</small>
+</div>
