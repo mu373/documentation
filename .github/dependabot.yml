@@ -6,3 +6,7 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "p5"
+        versions:
+          - ">=2.0.0" # Ignore version 2.0+ until official release
