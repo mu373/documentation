@@ -10,6 +10,8 @@ custom_edit_url: ""
     - Metropolis-Hastings algorithm
     - Importance sampling
     - Gibbs sampling
+        - multivariate
+        - inverse Wishart distribution
 - MCMC
 - ABC
 - Variational inference

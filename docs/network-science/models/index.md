@@ -15,3 +15,4 @@ custom_edit_url: null
     - Random geometric graphs (RGG)
     - Soft random geometric graphs (SRGG)
     - Degree-Corrected SRGGs (DC-SRGG)
+-  Block Two-Level Erdos-Renyi (BTER) model

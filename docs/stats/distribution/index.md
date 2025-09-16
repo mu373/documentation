@@ -10,3 +10,9 @@ custom_edit_url: ""
 - Poisson distribution
 - Exponential distribution
 - Negative Binomial distribution
+- Log normal distribution
+- Beta distribution
+- Gamma distribution
+- Inverse gamma distribution
+- Inverse Wishart distribution
+- LJK distribution
