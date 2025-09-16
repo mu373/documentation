@@ -40,7 +40,7 @@ math/
 │   ├── sampling-distributions/   # 標本分布, CLT, 漸近理論
 │   └── index.md
 
-├── inference/                    # 推定と検定
+├── statistical-inference/                    # 推定と検定
 │   ├── estimation/               # 点推定・区間推定・MLE
 │   ├── hypothesis-testing/       # 検定の考え方, 適合度検定
 │   ├── estimation-vs-testing/    # 検定と推定の対応
