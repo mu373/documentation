@@ -91,6 +91,32 @@ slug: intro
 ---
 ```
 
+To hide cells, add add `hide` or `hide_input` field in the JSON metadata.
+```json
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "hide_input": true
+   },
+   "source": [
+    "My markdown text"
+   ]
+  },
+```
+```json
+  {
+   "cell_type": "code",
+   "metadata": {
+    "hide_input": true
+   },
+   "outputs": [],
+   "source": [
+    "1 + 1"
+   ]
+  },
+```
+
+
 ## Testing
 
 Run tests on notebook conversion. This test is automated on [GitHub Actions](https://github.com/mu373/documentation/actions/workflows/test-notebook-convert.yml).
