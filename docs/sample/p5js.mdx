@@ -120,3 +120,78 @@ export const unitCircleSketch = (p, props) => {
 [Kenichi Yoneda](https://x.com/kyndinfo). [Sine waves and Additive Synthesis サイン波と加算合成](https://kyndinfo.notion.site/Sine-waves-and-Additive-Synthesis-80562e2ec05c4cc0b109691dea3201d7). [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).  
 <small>*p5.js sketch has been refactored into instance mode.</small>
 </div>
+
+## Video Shader
+export const VideoShaderSketch = (p, props) => {
+  let video;
+  let displaceColors;
+  const displaceColorsSrc = `
+precision highp float;
+uniform sampler2D tex0;
+varying vec2 vTexCoord;
+vec2 zoom(vec2 coord, float amount) {
+  vec2 relativeToCenter = coord - 0.5;
+  relativeToCenter /= amount; // Zoom in
+  return relativeToCenter + 0.5; // Put back into absolute coordinates
+}
+void main() {
+  // Get each color channel using coordinates with different amounts
+  // of zooms to displace the colors slightly
+  gl_FragColor = vec4(
+    texture2D(tex0, vTexCoord).r,
+    texture2D(tex0, zoom(vTexCoord, 1.05)).g,
+    texture2D(tex0, zoom(vTexCoord, 1.1)).b,
+    texture2D(tex0, vTexCoord).a
+  );
+}
+`;
+
+  return {
+    setup() {
+      // We need to set renderer to WEBGL after P5Sketch creates the canvas
+      p.setAttributes('webgl', true);
+      
+      video = p.createVideo(
+        'https://upload.wikimedia.org/wikipedia/commons/d/d2/DiagonalCrosswalkYongeDundas.webm'
+      );
+      video.volume(0);
+      video.hide();
+      video.loop();
+      
+      displaceColors = p.createFilterShader(displaceColorsSrc);
+      
+      p.describe(
+        'A video of a city crosswalk, with colors getting more offset the further from the center they are'
+      );
+    },
+    
+    draw() {
+      if (!video.loadedmetadata) return;
+      
+      p.background(255);
+      
+      // Calculate dimensions to fill the container completely
+      const w = props.width || p.width;
+      const h = props.height || p.height;
+      
+      // Fill the entire canvas with the video
+      p.push();
+      p.translate(0, 0);
+      p.imageMode(p.CORNER);
+      p.image(video, 0, 0, w, h);
+      p.pop();
+      
+      // Apply the shader effect
+      p.filter(displaceColors);
+    }
+  };
+};
+
+<P5Sketch
+  sketch={VideoShaderSketch}
+/>
+
+<div style={{textAlign: 'center'}}>
+[p5.js Contributors](https://p5js.org/people/) and the [Processing Foundation](https://processingfoundation.org/people). [Filter Shader](https://p5js.org/examples//3d-filter-shader/). [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).  
+<small>*p5.js sketch has been refactored into instance mode.</small>
+</div>
