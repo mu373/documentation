@@ -74,6 +74,9 @@ html {
   }
   video {
     max-width: 100%;
+    &.retina {
+      width: 50%;
+    }
   }
 }
 
