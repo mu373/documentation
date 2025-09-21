@@ -15,6 +15,7 @@
     "nb-convert": "uv run scripts/convert_all_notebooks.py .",
     "nb-convert-single": "uv run scripts/notebook_convert.py",
     "nb-copy-image": "bash scripts/copy_notebook_images.sh",
+    "nb-convert-single-with-image": "bash scripts/convert_notebook_and_copy_image.sh",
     "nb-build": "bun run nb-convert && bun run nb-copy-image",
     "typecheck": "tsc",
     "test:nb-convert": "uv run pytest tests/test-notebook-convert.py -v"

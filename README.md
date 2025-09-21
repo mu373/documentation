@@ -25,12 +25,10 @@ $ uv sync
 ```
 
 ```sh
+# Convert single notebook and then copy images to static directory
+bun run nb-convert-single-with-image docs/stats/computational-statistics/rejection-sampling.ipynb
+
 # Convert notebooks to markdown
-
-# For single notebook
-bun run nb-convert-single docs/stats/computational-statistics/rejection-sampling.ipynb
-
-# For all notebooks
 bun run nb-convert
 
 # Copy extracted images from notebook to static directory.
