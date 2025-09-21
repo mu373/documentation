@@ -26,7 +26,11 @@ $ uv sync
 
 ```sh
 # Convert notebooks to markdown
-# uv run scripts/convert_all_notebooks.py .
+
+# For single notebook
+bun run nb-convert-single docs/stats/computational-statistics/rejection-sampling.ipynb
+
+# For all notebooks
 bun run nb-convert
 
 # Copy extracted images from notebook to static directory.
