@@ -29,7 +29,7 @@ done
 ```
 
 This script will output:
-```
+```txt
 Count: 1
 Count: 2
 Count: 3
