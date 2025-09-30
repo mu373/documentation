@@ -7,7 +7,7 @@
 }
 
 .codeBlockContainer pre {
-  background-color: var(--prism-background-color);
+  background-color: var(--prism-background-color) !important;
   border-radius: 0.25em;
   border: var(--codeblock-border-color) solid 1px;
 }
