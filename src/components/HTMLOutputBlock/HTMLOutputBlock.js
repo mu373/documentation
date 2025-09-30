@@ -26,20 +26,34 @@ export const HTMLOutputBlock = ({ children, center = false }) => {
   console.log("center: ", center);
   const html = children.props.children.props.children;
 
-  const script = html.match(/<script[^>]*>(.*)<\/script>/s);
-  const hasScript = script && script.length > 1;
+  const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
+  const matches = Array.from(html.matchAll(scriptRegex));
 
+  // Extract script tags with src attribute
+  const srcScriptRegex = /<script[^>]*src=["']([^"']+)["'][^>]*><\/script>/gi;
+  const srcMatches = Array.from(html.matchAll(srcScriptRegex));
+  
+  // Extract inline scripts (without src)
+  const inlineScriptRegex = /<script[^>]*(?!src=)>([\s\S]*?)<\/script>/gi;
+  const inlineMatches = Array.from(html.matchAll(inlineScriptRegex));
+
+  
   return (
     <>
-      {hasScript ? (
-        <Helmet>
-          <script>{script[1]}</script>
-        </Helmet>
-      ) : null}
       <div
         className={styles.wrapper + (center ? " " + styles.center : "")}
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      {(inlineMatches.length > 0 || srcMatches.length > 0) && (
+        <Helmet>
+          {inlineMatches.map((m, idx) => (
+            <script key={`inline-${idx}`}>{m[1]}</script>
+          ))}
+          {srcMatches.map((m, idx) => (
+            <script key={`src-${idx}`} src={m[1]}></script>
+          ))}
+        </Helmet>
+      )}
     </>
   );
 };
