@@ -1,4 +1,4 @@
-name: Preview (Workers)
+name: PR Preview
 
 permissions:
   contents: read
