@@ -2,8 +2,9 @@
   "name": "docs",
   "main": "src/worker.ts",
   "compatibility_date": "2025-10-01",
+  "preview_urls": true,
   "assets": { "directory": "build/docs", "binding": "ASSETS" },
   "routes": [
-    { "pattern": "docs.minamiueda.com/docs/*", "zone_name": "minamiueda.com" }
+    { "pattern": "docs.minamiueda.com", "custom_domain": true }
   ]
 }
