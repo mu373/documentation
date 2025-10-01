@@ -4,7 +4,6 @@
  *
  * Usage example:
  *   bun scripts/render-deploy-comment.mjs \
- *     --project "resume-web" \
  *     --status "Ready" \
  *     --preview-url "https://<version>-<worker>.<subdomain>.workers.dev" \
  *     --context "pull_request" \
@@ -12,7 +11,6 @@
  *     --out "comment.txt"
  *
  * Inputs:
- *   --project      Project name to display
  *   --status       Deployment status text (e.g., "Ready")
  *   --preview-url  Preview (or Production) URL
  *   --context      "pull_request" | "production"
@@ -44,7 +42,7 @@ const previewLink = previewUrl ? `[${linkLabel}](${previewUrl})` : "N/A";
 
 const md =
   "| Deployment | Preview | Updated (UTC) |\n" +
-  "| :--- | :----- | :------ | :------ |\n" +
+  "| :--- | :------ | :------ |\n" +
   `| ${statusBadge} | ${previewLink} | ${updated} |\n\n`;
 
 writeFileSync(out, md, "utf8");
