@@ -127,7 +127,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Minami Ueda. Powered by Docusaurus, Vercel, and Cloudflare.<br/>Licensed under <a href="/docs/about/license">CC BY 4.0</a>`,
+      copyright: `Copyright © ${new Date().getFullYear()} Minami Ueda. Powered by Docusaurus and Cloudflare Workers.<br/>Licensed under <a href="/docs/about/license">CC BY 4.0</a>`,
     },
     prism: {
       theme: prismThemes.github,
