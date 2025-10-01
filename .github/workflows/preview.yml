@@ -69,13 +69,13 @@ jobs:
         WORKER=$(jq -r '.name' wrangler.jsonc)
         ACCOUNT_SUB="${{ secrets.CLOUDFLARE_SUBDOMAIN }}"
 
-        VERSION_ID=$(npx wrangler versions list --config wrangler.jsonc | grep -Eo 'Version ID:\s*[a-zA-Z0-9]+' | head -n1 | sed 's/Version ID:\s*//')
+        VERSION_ID=$(npx wrangler versions list --config wrangler.jsonc | grep -Eo 'Version ID:\s*[a-zA-Z0-9]+' | tail -n1 | sed 's/Version ID:\s*//')
 
         if [ -n "$VERSION_ID" ]; then
-          PREVIEW_URL="https://${VERSION_ID}-${WORKER}.${ACCOUNT_SUB}.workers.dev"
+          PREVIEW_URL="https://${VERSION_ID}-${WORKER}.${ACCOUNT_SUB}.workers.dev/docs/"
         else
           BRANCH="${{ github.head_ref || github.ref_name }}"
-          PREVIEW_URL="https://${BRANCH}-${WORKER}.${ACCOUNT_SUB}.workers.dev"
+          PREVIEW_URL="https://${BRANCH}-${WORKER}.${ACCOUNT_SUB}.workers.dev/docs/"
         fi
 
         echo "$PREVIEW_URL"
