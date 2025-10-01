@@ -64,7 +64,7 @@ jobs:
       run: |
         set -euo pipefail
         WORKER=$(jq -r '.name' wrangler.jsonc)
-        ACCOUNT_SUB="${{ secrets.CF_SUBDOMAIN }}"
+        ACCOUNT_SUB="${{ secrets.CLOUDFLARE_SUBDOMAIN }}"
 
         VERSION_ID=$(npx wrangler versions list --config wrangler.jsonc | \
           grep -Eo 'Worker Version ID: [a-zA-Z0-9]+' | head -n1 | awk '{print $4}' || true)
