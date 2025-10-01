@@ -2,5 +2,8 @@
   "name": "docs",
   "main": "src/worker.ts",
   "compatibility_date": "2025-10-01",
-  "assets": { "directory": "build/docs", "binding": "ASSETS" }
+  "assets": { "directory": "build/docs", "binding": "ASSETS" },
+  "routes": [
+    { "pattern": "docs.minamiueda.com/docs/*", "zone_name": "minamiueda.com" }
+  ]
 }
