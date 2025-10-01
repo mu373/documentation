@@ -46,6 +46,9 @@ jobs:
     - name: Convert notebooks
       run: bun run nb-build
 
+    - name: Build docusaurus
+      run: bun run build
+
     - name: Deploy preview to Cloudflare Workers
       id: wrangler-upload
       uses: cloudflare/wrangler-action@v3
