@@ -13,7 +13,8 @@ This website is developed using [Docusaurus](https://docusaurus.io/), an open-so
 - Repository: [GitHub](https://github.com/mu373/documentation/)
 - CI: [GitHub Actions](https://github.com/mu373/documentation/actions)
     - Runs the Jupyter notebook conversion and builds the entire website
-    - Deploys to Vercel
+    - Deploys to Cloudflare Workers with `wrangler`
+    - Generates PR previews to Cloudflare Workers
 - Hosting: [Cloudflare Workers](https://www.cloudflare.com/developer-platform/products/workers/)
     - Deployment is made to a subdomain (e.g., `https://mysubdomain.minamiueda.com/docs/`)
 - Reverse Proxy: [Cloudflare Workers](https://developers.cloudflare.com/workers/)
