@@ -27,7 +27,6 @@ function getArg(flag, fallback = "") {
   return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
 }
 
-const project = getArg("--project", "project");
 const statusText = getArg("--status", "Ready");
 const previewUrl = getArg("--preview-url", "");
 const context = getArg("--context", "pull_request");
@@ -40,14 +39,13 @@ if (!out) {
 }
 
 const statusBadge = `![${statusText}](https://vercel.com/static/status/ready.svg) ${statusText}`;
-const projectLink = `[${project}](https://dash.cloudflare.com/)`;
 const linkLabel = context === "production" ? "Production" : "Preview";
 const previewLink = previewUrl ? `[${linkLabel}](${previewUrl})` : "N/A";
 
 const md =
-  "| Project | Deployment | Preview | Updated (UTC) |\n" +
+  "| Deployment | Preview | Updated (UTC) |\n" +
   "| :--- | :----- | :------ | :------ |\n" +
-  `| ${projectLink} | ${statusBadge} | ${previewLink} | ${updated} |\n\n`;
+  `| ${statusBadge} | ${previewLink} | ${updated} |\n\n`;
 
 writeFileSync(out, md, "utf8");
 console.log(`[info] Wrote markdown to ${out}`);

@@ -68,8 +68,7 @@ jobs:
         WORKER=$(jq -r '.name' wrangler.jsonc)
         ACCOUNT_SUB="${{ secrets.CLOUDFLARE_SUBDOMAIN }}"
 
-        VERSION_ID=$(npx wrangler versions list --config wrangler.jsonc | \
-          grep -Eo 'Worker Version ID: [a-zA-Z0-9]+' | head -n1 | awk '{print $4}' || true)
+        VERSION_ID=$(npx wrangler versions list --config wrangler.jsonc | grep -Eo 'Version ID:\s*[a-zA-Z0-9]+' | head -n1 | sed 's/Version ID:\s*//' || true)
 
         if [ -n "$VERSION_ID" ]; then
           PREVIEW_URL="https://${VERSION_ID}-${WORKER}.${ACCOUNT_SUB}.workers.dev"
@@ -83,7 +82,6 @@ jobs:
     - name: Generate PR comment text for deploy status
       run: |
         bun scripts/cloudflare-deploy-comment.mjs \
-          --project "${{ secrets.VERCEL_PROJECT_ID }}" \
           --status "Ready" \
           --preview-url "${{ steps.derive.outputs.preview_url }}" \
           --context "pull_request" \
