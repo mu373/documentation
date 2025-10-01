@@ -54,9 +54,7 @@ jobs:
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         command: >
           versions upload --config wrangler.jsonc
-          --commit-hash "${{ github.sha }}"
           --message "${{ github.event.pull_request.title }}"
-          --branch "${{ github.head_ref || github.ref_name }}"
 
     - name: Get Preview URL
       shell: bash
