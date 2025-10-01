@@ -14,10 +14,10 @@ This website is developed using [Docusaurus](https://docusaurus.io/), an open-so
 - CI: [GitHub Actions](https://github.com/mu373/documentation/actions)
     - Runs the Jupyter notebook conversion and builds the entire website
     - Deploys to Vercel
-- Hosting: [Vercel](https://vercel.com/)
+- Hosting: [Cloudflare Workers](https://www.cloudflare.com/developer-platform/products/workers/)
     - Deployment is made to a subdomain (e.g., `https://mysubdomain.minamiueda.com/docs/`)
 - Reverse Proxy: [Cloudflare Workers](https://developers.cloudflare.com/workers/)
-    - To serve contents under the subdirectory of the domain root (at `https://minamiueda.com/docs/`), Cloudflare Workers is used to rewrite the request to the origin hosted at the subdomain.
+    - To serve contents under the subdirectory of the domain root (at `https://minamiueda.com/docs/`), separate Cloudflare Workers (at domain root) is used to rewrite the request to the origin hosted at the subdomain.
     - It's just a matter of preference, but I wanted have them under subdirectory, not at subdomain, while maintaining other things managed as separate projects served from different servers.
 
 All of the codes and documentation conents are published on [GitHub](https://github.com/mu373/documentation/). 
