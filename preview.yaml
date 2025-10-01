@@ -1,0 +1,94 @@
+name: Preview (Workers)
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.bun/install/cache
+        key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+        
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        
+    - name: Install Python dependencies
+      run: uv sync
+        
+    - name: Set up bun
+      uses: oven-sh/setup-bun@v2
+        
+    - name: Install dependencies
+      run: bun install --frozen-lockfile
+
+    - name: Convert notebooks
+      run: bun run nb-build
+
+    - name: Deploy preview to Cloudflare Workers
+      id: wrangler-upload
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        command: >
+          versions upload --config wrangler.jsonc
+          --commit-hash "${{ github.sha }}"
+          --message "${{ github.event.pull_request.title }}"
+          --branch "${{ github.head_ref || github.ref_name }}"
+
+    - name: Get Preview URL
+      shell: bash
+      run: |
+        set -euo pipefail
+        WORKER=$(jq -r '.name' wrangler.jsonc)
+        ACCOUNT_SUB="${{ secrets.CF_SUBDOMAIN }}"
+
+        VERSION_ID=$(npx wrangler versions list --config wrangler.jsonc | \
+          grep -Eo 'Worker Version ID: [a-zA-Z0-9]+' | head -n1 | awk '{print $4}' || true)
+
+        if [ -n "$VERSION_ID" ]; then
+          PREVIEW_URL="https://${VERSION_ID}-${WORKER}.${ACCOUNT_SUB}.workers.dev"
+        else
+          BRANCH="${{ github.head_ref || github.ref_name }}"
+          PREVIEW_URL="https://${BRANCH}-${WORKER}.${ACCOUNT_SUB}.workers.dev"
+        fi
+
+        echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
+
+    - name: Generate PR comment text for deploy status
+      run: |
+        bun scripts/cloudflare-deploy-comment.mjs \
+          --project "${{ secrets.VERCEL_PROJECT_ID }}" \
+          --status "Ready" \
+          --preview-url "${{ steps.derive.outputs.preview_url }}" \
+          --context "pull_request" \
+          --updated "$(date -u '+%b %d, %Y %-I:%M%P')" \
+          --out "comment.txt"
+
+    - name: Post a comment on PR
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh pr comment ${{ github.event.number }} --edit-last --create-if-none --body-file comment.txt
