@@ -61,6 +61,7 @@ jobs:
 
     - name: Get Preview URL
       shell: bash
+      id: get-preview-url
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       run: |
@@ -68,7 +69,7 @@ jobs:
         WORKER=$(jq -r '.name' wrangler.jsonc)
         ACCOUNT_SUB="${{ secrets.CLOUDFLARE_SUBDOMAIN }}"
 
-        VERSION_ID=$(npx wrangler versions list --config wrangler.jsonc | grep -Eo 'Version ID:\s*[a-zA-Z0-9]+' | head -n1 | sed 's/Version ID:\s*//' || true)
+        VERSION_ID=$(npx wrangler versions list --config wrangler.jsonc | grep -Eo 'Version ID:\s*[a-zA-Z0-9]+' | head -n1 | sed 's/Version ID:\s*//')
 
         if [ -n "$VERSION_ID" ]; then
           PREVIEW_URL="https://${VERSION_ID}-${WORKER}.${ACCOUNT_SUB}.workers.dev"
@@ -77,13 +78,14 @@ jobs:
           PREVIEW_URL="https://${BRANCH}-${WORKER}.${ACCOUNT_SUB}.workers.dev"
         fi
 
+        echo "$PREVIEW_URL"
         echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
 
     - name: Generate PR comment text for deploy status
       run: |
         bun scripts/cloudflare-deploy-comment.mjs \
           --status "Ready" \
-          --preview-url "${{ steps.derive.outputs.preview_url }}" \
+          --preview-url "${{ steps.get-preview-url.outputs.preview_url }}" \
           --context "pull_request" \
           --updated "$(date -u '+%b %d, %Y %-I:%M%P')" \
           --out "comment.txt"
