@@ -9,6 +9,12 @@ updates:
       docusaurus:
         patterns:
           - "@docusaurus/*"
+      react:
+        patterns:
+          - "react"
+          - "@types/react"
+          - "react-dom"
+          - "@types/react-dom"
     ignore:
       - dependency-name: "p5"
         versions:
