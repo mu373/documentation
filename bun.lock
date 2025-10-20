@@ -10,7 +10,7 @@
         "clsx": "^2.1.1",
         "docusaurus-plugin-sass": "^0.2.6",
         "hono": "^4.9.12",
-        "p5": "^1.11.10",
+        "p5": "^1.11.11",
         "prism-react-renderer": "^2.4.1",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
@@ -1734,7 +1734,7 @@
 
     "p-timeout": ["p-timeout@3.2.0", "", { "dependencies": { "p-finally": "^1.0.0" } }, "sha512-rhIwUycgwwKcP9yTOOFK/AKsAopjjCakVqLHePO3CC6Mir1Z99xT+R63jZxAT5lFZLa2inS5h+ZS2GvR99/FBg=="],
 
-    "p5": ["p5@1.11.10", "", {}, "sha512-lFe18Af+SUxyZyPkgza0DYhIV+Ymr1oD4w6Y0Bjhbi5TCaIktRys8xu847eH7epL/GZ1jATFekqW71/v4PvNGA=="],
+    "p5": ["p5@1.11.11", "", {}, "sha512-k58mfexvavFb+KNRpi70PbkKE2gCNiWQkzS4kVOyC2F9SKGgYy1jSO+JXZ24ikXV9OvZIAxGusiSVWEijYrmNg=="],
 
     "package-json": ["package-json@8.1.1", "", { "dependencies": { "got": "^12.1.0", "registry-auth-token": "^5.0.1", "registry-url": "^6.0.0", "semver": "^7.3.7" } }, "sha512-cbH9IAIJHNj9uXi196JVsRlt7cHKak6u/e6AkL/bkRelZ7rlL3X1YKxsZwa36xipOEKAsdtmaG6aAJoM1fx2zA=="],
 
