@@ -5,7 +5,7 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "nbconvert>=7.16.6",
+    "nbconvert>=7.17.1",
     "nbformat>=5.10.4",
 ]
 
