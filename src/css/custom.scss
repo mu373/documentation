@@ -93,6 +93,42 @@ html {
   h4 {
     --ifm-h4-font-size: 1.1rem !important;
   }
+  details.derivation-details {
+    --ifm-alert-background-color: transparent;
+    --ifm-alert-border-color: var(--ifm-color-emphasis-300);
+    --ifm-alert-foreground-color: var(--ifm-font-color-base);
+    --docusaurus-details-decoration-color: var(--ifm-color-emphasis-500);
+    background: transparent;
+    border: 1px solid var(--ifm-color-emphasis-300);
+    border-radius: 8px;
+    margin: 1rem 0;
+    padding: 0.85rem 1rem;
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: inherit;
+      margin: 0;
+    }
+
+    summary + div {
+      margin-top: 0.75rem !important;
+    }
+
+    [class*='collapsibleContent'] {
+      border-top: 0 !important;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+
+    [class*='collapsibleContent'] > :first-child {
+      margin-top: 0 !important;
+    }
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
   p {
   }
   video {

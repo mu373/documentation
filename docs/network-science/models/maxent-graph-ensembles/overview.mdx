@@ -1,0 +1,446 @@
+---
+title: Maximum-Entropy Ensembles of Graphs
+custom_title: Maximum-Entropy Ensembles of Graphs
+sidebar_label: Overview
+sidebar_position: 1
+slug: /network-science/models/maxent-graph-ensembles
+draft: false
+hide_title: true
+tags:
+    - maximum entropy
+    - graph ensembles
+    - canonical ensemble
+    - microcanonical ensemble
+custom_edit_url: null
+---
+
+import MaxentGraphExample from '@site/src/components/MaxentGraphExample';
+
+# Maximum-Entropy Ensembles of Graphs
+
+## Graph Ensembles
+
+### State Space
+
+A graph ensemble is a probability distribution $P(G)$ over a set of graphs, where each graph is a microstate. This statistical-mechanics view of networks is the starting point for maximum-entropy network models [[1]](#references)[[2]](#references).
+
+If we think of a graph ensemble consisted of 3 nodes, there are three possible undirected edges and therefore $2^3=8$ graphs in the ensemble.
+
+### Graph Observables
+
+Observables are functions of a graph. Examples include edge count $L(G)$, node degrees $k_i(G)$, triangle count, clustering, or any other statistic we may want an ensemble to preserve.
+
+### Probability Distributions on Graphs
+
+The probability distributions on the graph must satisfy
+
+$$
+\sum_G P(G)=1.
+$$
+
+If normalization is the only constraint, the maximum-entropy distribution is **uniform over all graphs**. For $N=3$, that means $P(G)=1/8$ and the entropy is $\log_2 8=3$ bits.
+
+## Maximum Entropy
+
+### Unconstrained Maximum Entropy
+
+Without constraints other than normalization, the entropy-maximizing distribution is uniform. This is the global maximum over the whole probability simplex.
+
+For the eight graphs on three nodes,
+
+$$
+P(G)=\frac{1}{8},\qquad S=\log_2 8=3.
+$$
+
+### Constrained Maximum Entropy
+
+The maximum-entropy principle says to preserve only the facts we choose as constraints and otherwise use the distribution with the largest entropy [[5]](#references). For graph ensembles, those facts are often expected observables $\langle x_a\rangle$ such as the expected total edge count and the degree distribution:
+
+$$
+\langle x_a\rangle=\sum_G P(G)\,x_a(G)=x_a^{*}.
+$$
+
+Among all graph distributions satisfying those equations, choose the one with largest Shannon entropy:
+
+$$
+S=-\sum_G P(G)\ln P(G).
+$$
+
+The result is the least-committed distribution consistent with the constraints.
+
+### Lagrange Multipliers
+
+We maximize entropy over the probabilities of all graphs: $P(G_1),P(G_2),\ldots$. The constraints are equations that those probabilities must satisfy:
+
+
+$$
+\sum_G P(G)=1,\qquad \sum_G P(G)x_a(G)=x_a^*\quad\text{for each observable }a.
+$$
+
+
+The Lagrangian $\mathcal{L}$ combines the entropy objective with terms enforcing normalization and the observable constraints:
+
+
+$$
+\mathcal{L}=
+\underbrace{-\sum_G P(G)\ln P(G)}_{\text{entropy}}
+-\underbrace{\alpha\left(\sum_G P(G)-1\right)}_{\text{normalization}}
+-\underbrace{\sum_a\lambda_a\left(\sum_G P(G)x_a(G)-x_a^*\right)}_{\text{observable constraints}}.
+$$
+
+
+At the maximum, changing one graph's probability while holding the others fixed should not improve the constrained objective. Thus $\partial\mathcal{L}/\partial P(G)=0$ gives
+
+$$
+-\ln P(G)-1-\alpha-\sum_a\lambda_a x_a(G)=0.
+$$
+
+
+Solving this equation for $P(G)$ gives
+$$P(G)\propto e^{-\sum_a\lambda_a x_a(G)}$$
+.
+The normalization constant is the partition function $Z$.
+
+Lagrange multipliers turn the constrained optimization into the Gibbs-Boltzmann form:
+
+$$
+\begin{aligned}
+P(G)&=\frac{e^{-H(G)}}{Z},\\
+H(G)&=\sum_a \lambda_a\,x_a(G),\\
+Z&=\sum_G e^{-H(G)}.
+\end{aligned}
+$$
+
+The multipliers are fixed by the constraint equations $\langle x_a\rangle=-\partial\ln Z/\partial\lambda_a=x_a^{*}$. In this page, the multipliers are best understood as fields conjugate to graph observables.
+
+## Canonical Ensembles
+
+Canonical ensembles use soft constraints: observables are **fixed in expectation**, not exactly graph by graph.
+
+### Example: Expected Edge Count
+
+Here, we use expected edge count as the running example of a canonical ensemble. The constrained observable is the number of edges, and the constraint is soft:
+
+$$
+\langle L\rangle=\ell.
+$$
+
+The Hamiltonian is
+
+$$
+H(G)=\lambda L(G).
+$$
+
+An ensemble tuned to $\langle L\rangle$ still assigns probability to graphs with several possible realized edge counts. Only the average is pinned.
+
+#### Partition Function
+
+Because $L(G)=\sum_{i<j}a_{ij}$, the partition function factorizes over possible edges:
+
+$$
+Z(\lambda)=\sum_G e^{-\lambda L(G)}=(1+e^{-\lambda})^M,
+$$
+
+where $M=\binom{N}{2}$ is the number of possible undirected edges.
+
+<details className="derivation-details">
+<summary>Step-by-step</summary>
+
+Write a graph $G$ by its adjacency matrix. Let $a_{ij}$ be the $(i,j)$ entry:
+
+$$
+a_{ij}=
+\begin{cases}
+1 & \text{if edge }(i,j)\text{ is present},\\
+0 & \text{otherwise}.
+\end{cases}
+$$
+
+For a simple undirected graph on $N$ labeled nodes, there are
+
+$$
+M=\binom{N}{2}
+$$
+
+possible edges. The edge count is the sum of these indicators:
+
+$$
+L(G)=\sum_{i<j}a_{ij}.
+$$
+
+With the edge-count Hamiltonian $H(G)=\lambda L(G)$, the partition function is
+
+$$
+Z(\lambda)
+=\sum_G e^{-\lambda L(G)}
+=\sum_{\{a_{ij}\}}
+\exp\!\left(-\lambda\sum_{i<j}a_{ij}\right).
+$$
+
+The exponential of a sum becomes a product:
+
+$$
+\exp\!\left(-\lambda\sum_{i<j}a_{ij}\right)
+=\prod_{i<j}e^{-\lambda a_{ij}}.
+$$
+
+Therefore the sum over all graphs is a sum over all binary choices for all possible edges:
+
+$$
+Z(\lambda)
+=\sum_{a_{12}=0}^{1}\sum_{a_{13}=0}^{1}\cdots
+\sum_{a_{N-1,N}=0}^{1}
+\prod_{i<j}e^{-\lambda a_{ij}}.
+$$
+
+Because the product separates by edge, the sums factorize:
+
+$$
+Z(\lambda)
+=\prod_{i<j}\sum_{a_{ij}=0}^{1}e^{-\lambda a_{ij}}.
+$$
+
+Each one-edge sum has only two terms:
+
+$$
+\sum_{a_{ij}=0}^{1}e^{-\lambda a_{ij}}
+=e^{-\lambda\cdot 0}+e^{-\lambda\cdot 1}
+=1+e^{-\lambda}.
+$$
+
+Since the same factor appears once for each of the $M$ possible edges,
+
+$$
+Z(\lambda)=\sum_G e^{-\lambda L(G)}=(1+e^{-\lambda})^M,
+$$
+
+</details>
+
+#### Erdos-Renyi G(N,p)
+
+The factorization means every possible edge is an independent Bernoulli trial:
+
+$$
+a_{ij}\sim\mathrm{Bernoulli}(p),
+\qquad
+p=\frac{e^{-\lambda}}{1+e^{-\lambda}}.
+$$
+
+Equivalently, a graph with $L(G)$ present edges has probability
+
+$$
+P(G)=p^{L(G)}(1-p)^{M-L(G)}.
+$$
+
+<details className="derivation-details">
+<summary>Step-by-step</summary>
+
+Now substitute the factorized partition function back into the Gibbs distribution:
+
+$$
+P(G)=\frac{e^{-\lambda L(G)}}{Z(\lambda)}.
+$$
+
+Using $L(G)=\sum_{i<j}a_{ij}$ and $Z(\lambda)=(1+e^{-\lambda})^M$,
+
+$$
+P(G)
+=\frac{\prod_{i<j}e^{-\lambda a_{ij}}}
+{\prod_{i<j}(1+e^{-\lambda})}
+=\prod_{i<j}
+\frac{e^{-\lambda a_{ij}}}{1+e^{-\lambda}}.
+$$
+
+This shows that the probability of a whole graph is a product of one-edge probabilities. For a single edge,
+
+$$
+P(a_{ij}=0)=\frac{1}{1+e^{-\lambda}},
+\qquad
+P(a_{ij}=1)=\frac{e^{-\lambda}}{1+e^{-\lambda}}.
+$$
+
+Define
+
+$$
+p=\frac{e^{-\lambda}}{1+e^{-\lambda}}.
+$$
+
+Then
+
+$$
+1-p=\frac{1}{1+e^{-\lambda}},
+$$
+
+so each edge probability can be written as
+
+$$
+P(a_{ij})=p^{a_{ij}}(1-p)^{1-a_{ij}}.
+$$
+
+Thus every possible edge is an independent Bernoulli trial:
+
+$$
+a_{ij}\sim\mathrm{Bernoulli}(p),
+\qquad
+p=\frac{e^{-\lambda}}{1+e^{-\lambda}}.
+$$
+
+For a graph with $L(G)$ present edges and $M-L(G)$ absent edges, the graph probability becomes
+
+$$
+P(G)
+=\prod_{i<j}p^{a_{ij}}(1-p)^{1-a_{ij}}
+=p^{L(G)}(1-p)^{M-L(G)}.
+$$
+
+This is exactly the Gilbert random graph model $G(N,p)$: each of the $M$ possible edges is included independently with probability $p$.
+
+</details>
+
+The maximum-entropy calculation determines the exponential form of the distribution, but the constraint value determines the numerical value of $\lambda$. For the edge-count ensemble, $\langle L\rangle=Mp$ with $M=\binom{N}{2}$, so a target $\ell$ implies $p=\ell/M$ and therefore
+
+$$
+\lambda=\log\frac{1-p}{p}
+=\log\frac{M-\ell}{\ell}.
+$$
+
+Thus $\lambda$ is the log-odds against an edge: positive values make sparse graphs more likely, negative values make dense graphs more likely, and $\lambda=0$ gives the uniform ensemble.
+
+This is Gilbert's $G(N,p)$ model: every possible edge is present independently with the same probability $p$ [[3]](#references). For $N=3$, there are three trials, so $\langle L\rangle=3p$ and $\langle k\rangle=2p$.
+
+#### Edge-Count Distribution
+
+A particular graph with $L$ present edges has probability
+
+$$
+P(G)=p^L(1-p)^{3-L}.
+$$
+
+Collapsing the eight graph probabilities by edge count gives a binomial distribution:
+
+$$
+P(L)=\binom{3}{L}p^{L}(1-p)^{3-L}.
+$$
+
+## Microcanonical Ensembles
+
+Microcanonical ensembles use hard constraints: an observable is fixed exactly on every graph in the support. Again, **microcanonical** says how the constraint is enforced; the observable says what is fixed.
+
+### Exact Edge Count
+
+For edge count, the hard constraint is
+
+$$
+L(G)=m.
+$$
+
+This gives the fixed-edge model $G(N,m)$, the original Erdos-Renyi random graph model [[4]](#references).
+
+### Uniform Distribution on a Constraint Set
+
+The maximum-entropy solution is uniform over all graphs satisfying the hard constraint:
+
+$$
+P(G)=
+\begin{cases}
+1/|\{G:L(G)=m\}| & \text{if } L(G)=m,\\
+0 & \text{otherwise}.
+\end{cases}
+$$
+
+For $N=3$ and $m=1$, the constraint set has three graphs, so the entropy is $\log_2 3\approx 1.59$ bits.
+
+### Canonical vs Microcanonical
+
+A chosen constraint value gives one entropy-maximizing distribution. Varying the constraint value gives a family of maximum-entropy distributions.
+
+For one global edge-count constraint, the canonical model $G(N,p)$ and microcanonical model $G(N,m)$ become equivalent as $N\to\infty$ when $m$ and $p$ are matched by edge density. For small $N$, they are visibly different: a canonical model tuned to $\langle L\rangle=1$ still leaves probability on $L=0,2,3$, while the microcanonical model puts all mass on $L=1$.
+
+## Degree-Constrained Ensembles
+
+The same maximum-entropy framework can constrain node degrees instead of only the total edge count. That gives the configuration-model family: the soft configuration model fixes expected degrees, while the hard configuration model fixes the degree sequence exactly. See [Configuration model](./configuration-model/) for that version.
+
+## Ensemble Equivalence
+
+### Global Constraints
+
+Equivalence is most natural for a small number of global, self-averaging constraints. Edge count is the basic example. In $G(N,p)$, the realized edge count $L$ fluctuates around $Mp$. Equivalently, the realized edge density $\hat p=L/M$ fluctuates around $p$, but those fluctuations shrink as $N$ grows because $M=\binom{N}{2}$ grows.
+
+### Local Constraints
+
+Degree-sequence constraints are local and extensive: there is one constraint per node. The canonical ensemble allows each degree to fluctuate around its target; the microcanonical ensemble forbids those fluctuations exactly.
+
+### Canonical-Microcanonical Non-Equivalence
+
+Canonical and microcanonical ensembles can fail to become equivalent when the number of constraints grows with the system. Graph ensembles with a fixed number of edges are equivalent in the large-graph limit, while ensembles with a fixed degree sequence need not be [[7]](#references).
+
+This is why $G(N,p)$ and $G(N,m)$ are usually interchangeable asymptotically, while soft and hard configuration models can remain measurably different.
+
+## Interactive Example for N=3
+
+The smallest nontrivial case is $N=3$. There are three possible undirected edges, so the full graph space has only $2^3=8$ graphs. That makes it possible to show the entire probability distribution $P(G)$ at once.
+
+Use the tabs to compare three ways of assigning probabilities to the same eight graphs. The edge-count mode is the canonical $G(N,p)$ ensemble: one expected edge count $\langle L\rangle$ fixes one probability $p$ shared by all edges. The degree mode replaces that global constraint with three local expected-degree constraints. Free play lets you draw an arbitrary distribution, so you can see what is lost when the distribution no longer has the maximum-entropy form.
+
+<MaxentGraphExample />
+
+### Probability Distribution of Graphs
+
+The first chart shows the probability of each individual graph. The graphs are grouped by their realized edge count $L=0,1,2,3$. In edge-count mode, all graphs with the same $L$ have the same probability because the Hamiltonian only contains $L(G)$.
+
+### Edge Count Distribution
+The second chart collapses those eight microstates onto the observable $L$. This is where degeneracy appears: the levels $L=0,1,2,3$ contain $1,3,3,1$ graphs. The control pins the expectation $\langle L\rangle$, not the realized value of $L$, so the observed edge count still fluctuates.
+
+For the edge-count ensemble, those fluctuations follow the binomial law for three Bernoulli trials:
+
+$$
+P(L)=\binom{3}{L}p^{L}(1-p)^{3-L}.
+$$
+
+### Entropy Ceiling
+
+The third chart compares entropy against the maximum possible entropy at the same expected edge count. The blue curve is
+
+$$
+S_{\max}(\langle L\rangle)=3\,h\!\left(\langle L\rangle/3\right),
+$$
+
+where $h$ is the binary entropy in bits. This is the constrained maximum-entropy envelope: for each value of $\langle L\rangle$, it gives the entropy of the canonical distribution with that expected edge count.
+
+The binary entropy function is
+
+$$
+h(p)=-p\log_2 p-(1-p)\log_2(1-p).
+$$
+
+For example, when $\langle L\rangle=1.5$,
+
+$$
+p=\frac{\langle L\rangle}{3}=\frac{1.5}{3}=0.5,
+\qquad
+h(0.5)=1,
+$$
+
+so
+
+$$
+S_{\max}(1.5)=3h(0.5)=3\ \text{bits}.
+$$
+
+This is the peak of the envelope: $p=1/2$, every graph has probability $1/8$, and the entropy reaches the unconstrained global maximum $\log_2 8=3$ bits.
+
+Any extra structure beyond the mean edge count lowers entropy. In the node-degree mode, fixing three expected degrees also fixes $\langle L\rangle$, but it adds node-specific information. The coral gap is the entropy spent to buy that extra structure. In free play, the same gap appears whenever the hand-drawn distribution has more structure than the maximum-entropy distribution at the same $\langle L\rangle$.
+
+
+## References
+
+<ol className="references">
+  <li><a id="ref-park-newman"></a>Park, J., & Newman, M. E. J. (2004). <a href="https://doi.org/10.1103/PhysRevE.70.066117" target="_blank" rel="noopener noreferrer">Statistical mechanics of networks</a>. <em>Physical Review E</em>, 70, 066117.</li>
+  <li><a id="ref-squartini-book"></a>Squartini, T., & Garlaschelli, D. (2017). <a href="https://link.springer.com/book/10.1007/978-3-319-69438-2" target="_blank" rel="noopener noreferrer"><em>Maximum-Entropy Networks: Pattern Detection, Network Reconstruction and Graph Combinatorics</em></a>. Springer.</li>
+  <li><a id="ref-gilbert"></a>Gilbert, E. N. (1959). <a href="https://doi.org/10.1214/aoms/1177706098" target="_blank" rel="noopener noreferrer">Random graphs</a>. <em>Annals of Mathematical Statistics</em>, 30(4), 1141-1144.</li>
+  <li><a id="ref-erdos-renyi"></a>Erdos, P., & Renyi, A. (1959). <a href="https://snap.stanford.edu/class/cs224w-readings/erdos59random.pdf" target="_blank" rel="noopener noreferrer">On random graphs I</a>. <em>Publicationes Mathematicae</em>, 6, 290-297.</li>
+  <li><a id="ref-jaynes"></a>Jaynes, E. T. (1957). <a href="https://doi.org/10.1103/PhysRev.106.620" target="_blank" rel="noopener noreferrer">Information theory and statistical mechanics</a>. <em>Physical Review</em>, 106, 620-630.</li>
+  <li><a id="ref-newman-strogatz-watts"></a>Newman, M. E. J., Strogatz, S. H., & Watts, D. J. (2001). <a href="https://doi.org/10.1103/PhysRevE.64.026118" target="_blank" rel="noopener noreferrer">Random graphs with arbitrary degree distributions and their applications</a>. <em>Physical Review E</em>, 64, 026118.</li>
+  <li><a id="ref-squartini-equivalence"></a>Squartini, T., de Mol, J., den Hollander, F., & Garlaschelli, D. (2015). <a href="https://doi.org/10.1103/PhysRevLett.115.268701" target="_blank" rel="noopener noreferrer">Breaking of ensemble equivalence in networks</a>. <em>Physical Review Letters</em>, 115, 268701.</li>
+  <li><a id="ref-snijders-ergm"></a>Snijders, T. A. B., Pattison, P. E., Robins, G. L., & Handcock, M. S. (2006). <a href="https://doi.org/10.1111/j.1467-9531.2006.00176.x" target="_blank" rel="noopener noreferrer">New specifications for exponential random graph models</a>. <em>Sociological Methodology</em>, 36(1), 99-153.</li>
+</ol>
