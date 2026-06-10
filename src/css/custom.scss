@@ -14,6 +14,8 @@
   --ifm-color-primary-lighter: #0061df;
   --ifm-color-primary-lightest: #006cfa;
   --ifm-global-shadow-lw: 0;
+  --ifm-container-width: 1240px;
+  --ifm-container-width-xl: 1440px;
   --h2-border-color: var(--codeblock-border-color);
 }
 
@@ -37,10 +39,15 @@
   --codeblock-border-color: #404040;
   --navbar-border-bottom: 1px solid var(--ifm-toc-border-color);
   --ifm-navbar-background-color: var(--ifm-background-color);
+  .markdown {
+    color: var(--ifm-font-color-base);
+  }
 }
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: auto;
+  text-rendering: auto;
 }
 
 .navbar {
@@ -49,13 +56,26 @@ html {
 }
 
 .container {
-  --ifm-spacing-horizontal: 2.5rem;
+  --ifm-spacing-horizontal: 2rem;
+}
+
+.table-of-contents {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.tocCollapsibleButton_TO0P,
+.tocCollapsibleContent_vkbj {
+  font-size: 0.95rem;
 }
 
 .markdown {
   --ifm-leading: 0.8em;
   --ifm-heading-vertical-rhythm-bottom: 0.6;
   --ifm-h3-vertical-rhythm-top: 1.8;
+  color: #1a1a1a;
+  font-size: 1.08rem;
+  line-height: 1.75;
   header {
     margin-top: 1em;
   }
@@ -69,6 +89,9 @@ html {
   }
   h3 {
     --ifm-h3-font-size: 1.15rem !important;
+  }
+  h4 {
+    --ifm-h4-font-size: 1.1rem !important;
   }
   p {
   }
@@ -118,11 +141,35 @@ code {
   --ifm-footer-background-color: #0f0f0f  !important;
 }
 
+/* Sidebar: when collapsed, hide Docusaurus' default sidebar strip entirely and
+ * rely on the fixed-position expand button instead. The hashed module classes
+ * are matched with [class*=] so the override survives CSS module hash changes.
+ */
+@media (min-width: 997px) {
+  aside[class*='docSidebarContainerHidden'] {
+    width: 0 !important;
+    border-right: none !important;
+    clip-path: none !important;
+    overflow: hidden !important;
+    cursor: default !important;
+  }
+
+  main[class*='docMainContainerEnhanced'] article {
+    padding-left: 32px;
+  }
+
+  .theme-doc-sidebar-container nav.menu {
+    padding-bottom: 60px;
+  }
+}
+
 @media (max-width: 997px) {
   .container {
     --ifm-spacing-horizontal: 1rem;
   }
   .markdown {
+    font-size: 1rem;
+    line-height: 1.7;
     h1 {
       --ifm-h1-font-size: 1.6rem !important;
     }
@@ -131,6 +178,9 @@ code {
     }
     h3 {
       --ifm-h3-font-size: 1.05rem !important;
+    }
+    h4 {
+      --ifm-h4-font-size: 1rem !important;
     }
   }
 }
