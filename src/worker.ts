@@ -14,6 +14,7 @@ app.get('/docs/*', async (c) => {
   stripped.pathname = stripped.pathname.replace(/^\/docs(\/|$)/, '/')
 
   let res = await c.env.ASSETS.fetch(new Request(stripped.toString(), c.req.raw))
+  res = restoreDocsBasePathRedirect(res, url.origin)
 
   if (res.status === 404 && (c.req.header('Accept') || '').includes('text/html')) {
     const idx = new URL('/index.html', stripped)
@@ -24,5 +25,42 @@ app.get('/docs/*', async (c) => {
 
   return res
 })
+
+function restoreDocsBasePathRedirect(response: Response, origin: string): Response {
+  if (![301, 302, 303, 307, 308].includes(response.status)) {
+    return response
+  }
+
+  const location = response.headers.get('Location')
+  if (!location) {
+    return response
+  }
+
+  let nextLocation = location
+
+  if (location.startsWith('/') && location !== '/docs' && !location.startsWith('/docs/')) {
+    nextLocation = `/docs${location}`
+  } else {
+    try {
+      const targetUrl = new URL(location)
+      if (targetUrl.origin === origin) {
+        if (!targetUrl.pathname.startsWith('/docs/')) {
+          targetUrl.pathname = `/docs${targetUrl.pathname}`
+        }
+        nextLocation = `${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`
+      }
+    } catch {
+      return response
+    }
+  }
+
+  if (nextLocation === location) {
+    return response
+  }
+
+  const rewritten = new Response(response.body, response)
+  rewritten.headers.set('Location', nextLocation)
+  return rewritten
+}
 
 export default app
