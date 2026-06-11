@@ -134,6 +134,9 @@ html {
   video {
     max-width: 100%;
     &.retina {
+      width: 100%;
+    }
+    &.retina-half {
       width: 50%;
     }
   }
@@ -145,6 +148,18 @@ hr {
 
 .katex {
   font-size: 1.1em;
+}
+
+.katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.2rem;
+}
+
+.katex-display > .katex {
+  display: inline-block;
+  min-width: max-content;
 }
 
 code {
