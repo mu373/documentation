@@ -1,0 +1,66 @@
+.card {
+  background: var(--ifm-code-background);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0.5rem 0 var(--ifm-leading);
+  padding: 0.75rem 0.85rem;
+  text-decoration: none;
+  transition: border-color 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.card:hover,
+.card:focus-visible {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-primary);
+  color: inherit;
+  text-decoration: none;
+}
+
+.title,
+.description,
+.origin {
+  display: block;
+}
+
+.title {
+  color: var(--ifm-color-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.description {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.origin {
+  align-items: center;
+  color: var(--ifm-color-emphasis-600);
+  display: flex;
+  gap: 0.35rem;
+  line-height: 1.5;
+}
+
+.favicon {
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.domain {
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

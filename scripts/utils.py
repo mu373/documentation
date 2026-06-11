@@ -54,6 +54,7 @@ def show_animation_video_base64(
     loop=True,
     fps=20,
     retina=True,
+    class_name="",
 ):
     """
     Display the animation as an MP4 video in Jupyter Notebook using base64 embedding.
@@ -94,11 +95,12 @@ def show_animation_video_base64(
     if loop:
         video_tag_options += "loop "
 
-    classNames = ""
+    classNames = class_name
     if retina:
-        classNames += "retina"
+        classNames = f"{classNames} retina".strip()
 
-    # Create HTML to embed the video with controls
+    # Create HTML to embed the video. Site rendering may replace this with
+    # a component-level player while preserving the source and attributes.
     html = f'''
     <video playsinline {video_tag_options} class="{classNames}">
       <source src="data:{mimetype_dict[type]};base64,{b64}" type="{mimetype_dict[type]}">

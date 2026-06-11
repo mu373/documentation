@@ -9,6 +9,7 @@ import Details from "@theme/Details";
 import CodeOutputBlock from '@site/src/components/CodeOutputBlock/CodeOutputBlock.js';
 import CodeOutputImageBlock from '@site/src/components/CodeOutputImageBlock/CodeOutputImageBlock.js';
 import HTMLOutputBlock from '@site/src/components/HTMLOutputBlock/HTMLOutputBlock.js';
+import LinkCard from '@site/src/components/LinkCard/LinkCard.js';
 
 const MDXComponents = {
   head: (props) => <Head {...props} />,
@@ -77,6 +78,7 @@ const MDXComponents = {
   CodeOutputBlock,
   CodeOutputImageBlock,
   HTMLOutputBlock,
+  LinkCard,
 };
 
 export default MDXComponents;

@@ -1,0 +1,80 @@
+.player {
+  --video-control-bar-height: 3.25em;
+  --video-control-foreground: var(--ifm-font-color-base);
+  --video-control-muted: var(--ifm-color-emphasis-600);
+  max-width: 100%;
+  margin-bottom: calc(var(--ifm-leading) + var(--video-control-bar-height));
+}
+
+[data-theme='dark'] .player {
+  --video-control-muted: var(--ifm-color-emphasis-700);
+}
+
+.player.retina {
+  width: 100%;
+}
+
+.player.retinaHalf {
+  width: 50%;
+}
+
+.player :global(.video-js) {
+  background: transparent;
+  color: var(--video-control-foreground);
+  font-family: var(--ifm-font-family-base);
+  margin-bottom: var(--video-control-bar-height);
+  overflow: visible;
+}
+
+.player :global(.video-js .vjs-control-bar) {
+  background: transparent;
+  bottom: 0;
+  display: flex;
+  font-size: 0.9em;
+  height: var(--video-control-bar-height);
+  opacity: 1;
+  padding: 0;
+  transform: translateY(100%);
+  visibility: visible;
+}
+
+.player :global(.video-js.vjs-has-started.vjs-user-inactive.vjs-playing .vjs-control-bar) {
+  opacity: 1;
+  visibility: visible;
+}
+
+.player :global(.video-js .vjs-slider) {
+  background-color: var(--ifm-color-emphasis-200);
+}
+
+.player :global(.video-js .vjs-load-progress),
+.player :global(.video-js .vjs-volume-bar) {
+  background-color: var(--ifm-color-emphasis-300);
+}
+
+.player :global(.video-js .vjs-play-progress),
+.player :global(.video-js .vjs-volume-level) {
+  background-color: var(--ifm-color-primary);
+}
+
+.player :global(.video-js .vjs-button > .vjs-icon-placeholder::before),
+.player :global(.video-js .vjs-time-control),
+.player :global(.video-js .vjs-playback-rate .vjs-playback-rate-value) {
+  color: var(--video-control-muted);
+  text-shadow: none;
+}
+
+.player :global(.video-js .vjs-button:hover > .vjs-icon-placeholder::before),
+.player :global(.video-js .vjs-button:focus > .vjs-icon-placeholder::before) {
+  color: var(--ifm-color-primary);
+}
+
+.player :global(.video-js .vjs-progress-control) {
+  min-width: 5em;
+}
+
+@media (max-width: 997px) {
+  .player.retinaHalf {
+    width: 100%;
+  }
+}

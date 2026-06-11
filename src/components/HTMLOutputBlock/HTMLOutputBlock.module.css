@@ -4,6 +4,10 @@
   margin-bottom: var(--ifm-leading);
 }
 
+.videoWrapper {
+  margin-bottom: var(--ifm-leading);
+}
+
 .wrapper code,
 .wrapper pre {
   border: none !important;

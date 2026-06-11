@@ -8,6 +8,7 @@ custom_edit_url: ""
 - Monte Carlo
 - Sampling
     - Metropolis-Hastings algorithm
+        - [Metropolis-Hastings algorithm](./metropolis-hastings)
     - Importance sampling
     - Gibbs sampling
         - multivariate
