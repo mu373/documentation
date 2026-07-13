@@ -45,7 +45,7 @@
     "@docusaurus/tsconfig": "3.10.0",
     "@docusaurus/types": "3.10.0",
     "typescript": "~6.0.3",
-    "wrangler": "^4.84.1"
+    "wrangler": "^4.110.0"
   },
   "browserslist": {
     "production": [
