@@ -28,7 +28,7 @@
     "clsx": "^2.1.1",
     "docusaurus-plugin-sass": "^0.2.6",
     "hono": "^4.12.31",
-    "katex": "^0.16.21",
+    "katex": "^0.18.1",
     "p5": "^1.11.13",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.5",
