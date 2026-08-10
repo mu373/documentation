@@ -10,7 +10,7 @@
         "@mdx-js/react": "^3.1.1",
         "clsx": "^2.1.1",
         "docusaurus-plugin-sass": "^0.2.6",
-        "hono": "^4.12.31",
+        "hono": "^4.13.1",
         "katex": "^0.18.1",
         "p5": "^1.11.13",
         "prism-react-renderer": "^2.4.1",
@@ -1333,7 +1333,7 @@
 
     "hoist-non-react-statics": ["hoist-non-react-statics@3.3.2", "", { "dependencies": { "react-is": "^16.7.0" } }, "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw=="],
 
-    "hono": ["hono@4.12.31", "", {}, "sha512-zJIHFrl6bq3RDd2YusFNCDlM8qUprxKswyi/OPzPyzKDdyBXDqWx8bZlZ7R+saTdSTatUmb3O7K4SspGPaEOQg=="],
+    "hono": ["hono@4.13.1", "", {}, "sha512-kdJoFVv2xmayw6cY09H7AbMJMt8Jn5jdlEdXsP7AGBdF2DIptVlKlOLKXP41yPip4/a3yQPv9gVcJYI8YY04dw=="],
 
     "hpack.js": ["hpack.js@2.1.6", "", { "dependencies": { "inherits": "^2.0.1", "obuf": "^1.0.0", "readable-stream": "^2.0.1", "wbuf": "^1.1.0" } }, "sha512-zJxVehUdMGIKsRaNt7apO2Gqp0BdqW5yaiGHXXmbpvxgBYVZnAql+BJb4RO5ad2MgpbZKn5G6nMnegrH1FcNYQ=="],
 
