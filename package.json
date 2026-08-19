@@ -38,7 +38,7 @@
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "sass": "^1.102.0",
-    "video.js": "^8.23.7"
+    "video.js": "^8.24.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.10.0",
