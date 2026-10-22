@@ -26,26 +26,33 @@
     "@docusaurus/preset-classic": "3.10.2",
     "@mdx-js/react": "^3.1.1",
     "clsx": "^2.1.1",
-    "docusaurus-plugin-sass": "^0.2.6",
-    "hono": "^4.13.9",
+    "docusaurus-plugin-sass": "^0.2.7",
+    "hono": "^4.13.13",
     "katex": "^0.18.9",
     "p5": "^1.11.13",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "react-helmet": "^6.1.0",
     "react-icons": "^5.7.0",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
-    "sass": "^1.105.0",
-    "video.js": "^8.24.0"
+    "sass": "^1.106.1",
+    "video.js": "^8.24.2"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.10.2",
     "@docusaurus/tsconfig": "3.10.2",
     "@docusaurus/types": "3.10.2",
     "typescript": "~7.0.2",
-    "wrangler": "^4.123.0"
+    "wrangler": "^4.151.3"
+  },
+  "overrides": {
+    "katex": "0.18.9",
+    "postcss-selector-parser": "7.1.7",
+    "serialize-javascript": "7.0.5",
+    "tinypool": "2.1.2",
+    "uuid": "11.1.1"
   },
   "browserslist": {
     "production": [
